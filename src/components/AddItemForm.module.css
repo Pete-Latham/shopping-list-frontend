@@ -1,0 +1,160 @@
+/* AddItemForm component styles */
+.formContainer {
+  background: linear-gradient(135deg, 
+    rgba(100, 108, 255, 0.02) 0%, 
+    rgba(97, 218, 251, 0.02) 100%
+  );
+  border: 1px solid var(--mantine-color-gray-2);
+  transition: all 0.3s ease;
+}
+
+.formContainer:hover {
+  border-color: var(--mantine-color-blue-3);
+  box-shadow: 0 4px 20px rgba(100, 108, 255, 0.08);
+}
+
+.formContainer:focus-within {
+  border-color: var(--mantine-color-blue-4);
+  box-shadow: 0 4px 20px rgba(100, 108, 255, 0.12);
+}
+
+.form {
+  position: relative;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.inputGroup > * {
+  flex: 1;
+  min-width: 120px;
+}
+
+.quantityInput {
+  max-width: 140px;
+}
+
+.unitSelect {
+  max-width: 120px;
+}
+
+.notesField {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.actionsGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mantine-color-gray-2);
+}
+
+.cancelButton {
+  transition: all 0.2s ease;
+}
+
+.cancelButton:hover {
+  background-color: var(--mantine-color-gray-1);
+}
+
+.submitButton {
+  background: linear-gradient(135deg, 
+    var(--mantine-color-blue-5), 
+    var(--mantine-color-blue-6)
+  );
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.submitButton:hover {
+  background: linear-gradient(135deg, 
+    var(--mantine-color-blue-6), 
+    var(--mantine-color-blue-7)
+  );
+  transform: translateY(-1px);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}
+
+/* Success state */
+.formContainer.success {
+  border-color: var(--mantine-color-green-4);
+  background: linear-gradient(135deg, 
+    rgba(64, 192, 87, 0.05) 0%, 
+    rgba(64, 192, 87, 0.02) 100%
+  );
+}
+
+/* Error state */
+.formContainer.error {
+  border-color: var(--mantine-color-red-4);
+  background: linear-gradient(135deg, 
+    rgba(250, 82, 82, 0.05) 0%, 
+    rgba(250, 82, 82, 0.02) 100%
+  );
+}
+
+/* Loading state */
+.form.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .inputGroup {
+    flex-direction: column;
+  }
+  
+  .inputGroup > * {
+    min-width: auto;
+    max-width: none;
+  }
+  
+  .actionsGroup {
+    flex-direction: column;
+  }
+  
+  .actionsGroup button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .formContainer {
+    margin: 0 -0.5rem;
+    border-radius: 0.5rem;
+  }
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .formContainer {
+    background: linear-gradient(135deg, 
+      rgba(100, 108, 255, 0.05) 0%, 
+      rgba(97, 218, 251, 0.05) 100%
+    );
+    border-color: var(--mantine-color-dark-4);
+  }
+  
+  .formContainer:hover {
+    border-color: var(--mantine-color-blue-4);
+    box-shadow: 0 4px 20px rgba(100, 108, 255, 0.15);
+  }
+  
+  .actionsGroup {
+    border-top-color: var(--mantine-color-dark-4);
+  }
+  
+  .cancelButton:hover {
+    background-color: var(--mantine-color-dark-5);
+  }
+}

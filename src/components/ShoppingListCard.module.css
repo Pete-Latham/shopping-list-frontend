@@ -1,0 +1,90 @@
+/* ShoppingListCard component styles */
+.card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cardTitle {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.cardTitle:hover {
+  color: var(--mantine-color-blue-6);
+}
+
+.progressSection {
+  margin: 1rem 0;
+}
+
+.completeBadge {
+  animation: completePulse 0.6s ease-in-out;
+}
+
+@keyframes completePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.statusBadge {
+  font-weight: 600;
+}
+
+.actionButton {
+  margin-top: 1rem;
+  transition: all 0.2s ease;
+}
+
+.actionButton:hover {
+  transform: translateY(-1px);
+}
+
+.metadata {
+  border-top: 1px solid var(--mantine-color-gray-2);
+  padding-top: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  }
+  
+  .metadata {
+    border-top-color: var(--mantine-color-dark-4);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
