@@ -7,6 +7,8 @@ import '@mantine/core/styles.css'
 import '@mantine/notifications/styles.css'
 import './index.css'
 import App from './App.tsx'
+// Initialize touch detection for better mobile UX
+import './utils/touchDetection'
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -1,51 +1,60 @@
-/* App component styles using CSS modules */
+/* App component styles - Mobile-First */
+/* Mobile base styles */
 .app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
   min-height: 100vh;
+  padding: 1rem;
+  margin: 0 auto;
 }
 
 .appHeader {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  padding: 0 0.5rem;
 }
 
 .appHeader h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 2.2em;
+  line-height: 1.2;
   margin: 0;
   background: linear-gradient(135deg, #646cff, #61dafb);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  /* Better mobile text handling */
+  word-break: break-word;
 }
 
 .mainContent {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
+  flex: 1;
 }
 
+/* Mobile-first grid - single column on mobile */
 .shoppingListsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  gap: 1rem;
   width: 100%;
-  max-width: 1200px;
+  max-width: 100%;
 }
 
 .emptyState {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 3rem 1rem;
   color: var(--mantine-color-dimmed);
-  font-size: 1.1rem;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 .emptyState p {
   margin: 0;
   opacity: 0.8;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .loading,
@@ -54,25 +63,70 @@
   justify-content: center;
   align-items: center;
   min-height: 200px;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  padding: 1rem;
+  text-align: center;
 }
 
 .error {
   color: var(--mantine-color-red-6);
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
+/* Tablet styles (portrait) */
+@media (min-width: 481px) {
   .app {
-    padding: 1rem;
+    padding: 1.5rem;
   }
   
-  .shoppingListsGrid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .appHeader {
+    margin-bottom: 2rem;
   }
   
   .appHeader h1 {
-    font-size: 2.5em;
+    font-size: 2.8em;
+  }
+  
+  .mainContent {
+    gap: 2rem;
+  }
+  
+  .shoppingListsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: 800px;
+  }
+  
+  .emptyState {
+    padding: 4rem 2rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Tablet landscape and small desktop */
+@media (min-width: 769px) {
+  .app {
+    padding: 2rem;
+    max-width: 1200px;
+  }
+  
+  .appHeader h1 {
+    font-size: 3.2em;
+  }
+  
+  .shoppingListsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    max-width: 1200px;
+  }
+}
+
+/* Large desktop */
+@media (min-width: 1201px) {
+  .app {
+    max-width: 1400px;
+  }
+  
+  .shoppingListsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 2rem;
   }
 }

@@ -1,8 +1,10 @@
-/* Global CSS - works alongside CSS modules and Mantine */
+/* Global CSS - Mobile-First Approach */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  /* Mobile-optimized typography */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6; /* Better mobile readability */
   font-weight: 400;
+  font-size: 16px; /* Prevent zoom on iOS inputs */
 
   color-scheme: light dark;
   
@@ -10,29 +12,162 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* Mobile-first touch improvements */
+  -webkit-tap-highlight-color: rgba(100, 108, 255, 0.1);
+  -webkit-touch-callout: none;
 }
 
+/* Mobile-first link styles */
 a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  /* Larger touch targets */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 
+a:hover, a:focus {
+  color: #535bf2;
+  outline: 2px solid rgba(100, 108, 255, 0.3);
+  outline-offset: 2px;
+}
+
+/* Mobile-optimized body */
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  /* Improve scroll performance on mobile */
+  -webkit-overflow-scrolling: touch;
+  /* Better font rendering on mobile */
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
-/* Root container */
+/* Root container - mobile optimized */
 #root {
   width: 100%;
   min-height: 100vh;
+  /* Better mobile layout */
+  display: flex;
+  flex-direction: column;
 }
 
-/* Let Mantine handle button styling */
+/* Improved focus styles for mobile accessibility */
+*:focus {
+  outline: 2px solid #646cff;
+  outline-offset: 2px;
+}
 
-/* Let Mantine handle theming */
+/* Remove focus styles on mouse interaction */
+.mouse-user *:focus {
+  outline: none;
+}
+
+/* Better mobile scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 108, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 108, 255, 0.3);
+}
+
+/* Touch device specific styles */
+.touch-device {
+  /* Better touch scrolling */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Touch-friendly button and interactive element base styles */
+.touch-device button,
+.touch-device [role="button"],
+.touch-device input[type="button"],
+.touch-device input[type="submit"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Better mobile form controls */
+.touch-device input,
+.touch-device textarea,
+.touch-device select {
+  font-size: 16px; /* Prevent zoom on iOS */
+  padding: 0.75rem;
+}
+
+/* Mobile-optimized focus states */
+.touch-device *:focus {
+  outline: 3px solid rgba(100, 108, 255, 0.4);
+  outline-offset: 2px;
+}
+
+/* Remove hover effects on touch devices */
+.touch-device *:hover {
+  /* Reset hover styles - they don't make sense on touch */
+}
+
+/* Mobile safe area support for devices with notches */
+@supports (padding: max(0px)) {
+  .mobile-safe-area {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --mantine-color-blue-6: #0000ff;
+    --mantine-color-text: #000000;
+  }
+  
+  [data-mantine-color-scheme="dark"] {
+    --mantine-color-text: #ffffff;
+  }
+}
+
+/* Mobile-specific utilities */
+.mobile-only {
+  display: block;
+}
+
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none;
+  }
+  
+  .desktop-only {
+    display: block;
+  }
+}

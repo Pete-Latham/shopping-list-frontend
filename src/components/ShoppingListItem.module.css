@@ -1,13 +1,23 @@
-/* ShoppingListItem component styles */
+/* ShoppingListItem component styles - Mobile-First */
+
+/* Mobile base styles */
 .itemContainer {
   transition: all 0.2s ease-in-out;
   border-left: 3px solid transparent;
+  padding: 1rem;
+  /* Mobile-optimized touch interactions */
+  -webkit-tap-highlight-color: rgba(100, 108, 255, 0.1);
+  /* Ensure adequate touch target height */
+  min-height: 72px;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
-.itemContainer:hover {
-  transform: translateX(2px);
-  border-left-color: var(--mantine-color-blue-4);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+/* Mobile touch feedback */
+.itemContainer:active {
+  background-color: rgba(100, 108, 255, 0.05);
+  transform: scale(0.99);
 }
 
 .itemContent {
@@ -18,6 +28,9 @@
 .itemName {
   word-wrap: break-word;
   transition: all 0.2s ease;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
 }
 
 .itemName.completed {
@@ -27,55 +40,66 @@
 
 .itemDetails {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.5rem;
-  margin-top: 0.5rem;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .quantityBadge {
   font-weight: 600;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
 }
 
 .notes {
   font-style: italic;
   color: var(--mantine-color-dimmed);
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  /* Mobile: show full notes */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  max-width: none;
 }
 
 .actions {
   display: flex;
-  gap: 0.25rem;
-  opacity: 0.6;
-  transition: opacity 0.2s ease;
-}
-
-.itemContainer:hover .actions {
+  gap: 0.5rem;
+  /* Always visible on mobile for better UX */
   opacity: 1;
+  flex-shrink: 0;
+  align-items: flex-start;
+  padding-top: 0.125rem;
 }
 
 .actionButton {
   transition: all 0.2s ease;
+  /* Mobile-friendly touch targets */
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.actionButton:hover {
-  transform: scale(1.1);
+.actionButton:active {
+  transform: scale(0.9);
+  background-color: rgba(100, 108, 255, 0.1);
 }
 
 /* Checkbox styling */
 .checkbox {
   flex-shrink: 0;
+  /* Better mobile checkbox sizing */
+  transform: scale(1.2);
 }
 
 /* Completed item styling */
 .itemContainer.completed {
   background: linear-gradient(90deg, 
-    rgba(64, 192, 87, 0.05) 0%, 
-    rgba(64, 192, 87, 0.02) 100%
+    rgba(64, 192, 87, 0.08) 0%, 
+    rgba(64, 192, 87, 0.03) 100%
   );
 }
 
@@ -83,41 +107,97 @@
   color: var(--mantine-color-green-7);
 }
 
-/* Mobile responsiveness */
-@media (max-width: 480px) {
+/* Tablet portrait */
+@media (min-width: 481px) {
   .itemContainer {
-    padding: 0.75rem;
+    padding: 0.875rem;
+    min-height: 68px;
   }
   
   .itemDetails {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-  }
-  
-  .actions {
-    opacity: 1; /* Always show actions on mobile */
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
   }
   
   .notes {
-    max-width: none;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
+    max-width: 300px;
+  }
+  
+  .checkbox {
+    transform: scale(1.1);
+  }
+}
+
+/* Tablet landscape and desktop */
+@media (min-width: 769px) {
+  .itemContainer {
+    padding: 0.75rem;
+    min-height: auto;
+  }
+  
+  .actions {
+    opacity: 0.6;
+    gap: 0.25rem;
+  }
+  
+  .itemContainer:hover {
+    transform: translateX(2px);
+    border-left-color: var(--mantine-color-blue-4);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .itemContainer:hover .actions {
+    opacity: 1;
+  }
+  
+  .actionButton {
+    min-width: 32px;
+    min-height: 32px;
+  }
+  
+  .actionButton:hover {
+    transform: scale(1.1);
+  }
+  
+  .actionButton:active {
+    transform: scale(1.0);
+  }
+  
+  .notes {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .checkbox {
+    transform: scale(1.0);
+  }
+}
+
+/* Large desktop */
+@media (min-width: 1201px) {
+  .notes {
+    max-width: 250px;
   }
 }
 
 /* Dark theme adjustments */
 @media (prefers-color-scheme: dark) {
-  .itemContainer:hover {
-    border-left-color: var(--mantine-color-blue-3);
-    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
-  }
-  
   .itemContainer.completed {
     background: linear-gradient(90deg, 
-      rgba(64, 192, 87, 0.08) 0%, 
-      rgba(64, 192, 87, 0.03) 100%
+      rgba(64, 192, 87, 0.12) 0%, 
+      rgba(64, 192, 87, 0.04) 100%
     );
+  }
+  
+  /* Desktop dark theme hover */
+  @media (min-width: 769px) {
+    .itemContainer:hover {
+      border-left-color: var(--mantine-color-blue-3);
+      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+    }
   }
 }

@@ -10,7 +10,7 @@ const App: React.FC = () => {
   if (error) return <div className={styles.error}>Error: {error.message}</div>;
 
   return (
-    <div className={styles.app}>
+    <div className={`${styles.app} mobile-safe-area`}>
       <header className={styles.appHeader}>
         <h1>🛒 Shopping Lists</h1>
       </header>
