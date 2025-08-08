@@ -8,7 +8,8 @@ import type {
   UpdateShoppingListItemDto,
 } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+// Use proxy in development, allow override with environment variable
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -16,6 +17,12 @@ const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// Request interceptor for debugging
+// apiClient.interceptors.request.use((config) => {
+//   console.log('[API CLIENT] Making request:', config.method?.toUpperCase(), config.url, 'Full URL:', config.baseURL + config.url);
+//   return config;
+// });
 
 // Shopping Lists API
 export const shoppingListsApi = {

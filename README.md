@@ -30,7 +30,35 @@ npm run build
 ```
 
 ### Development Server
+
+#### Running Frontend Only
+```bash
+npm run dev
+```
 The app will be available at `http://localhost:5173/`
+
+#### Full Development Setup (Frontend + Backend)
+
+1. **Start the backend server** (in a separate terminal):
+   ```bash
+   # Navigate to your backend directory
+   cd ../shopping-list-backend
+   
+   # Start the backend server on port 3000
+   npm run dev
+   ```
+
+2. **Start the frontend development server**:
+   ```bash
+   # In the frontend directory
+   npm run dev
+   ```
+
+3. **Access the application**:
+   - Frontend: `http://localhost:5173/`
+   - Backend API: `http://localhost:3000/`
+
+The frontend is configured with a Vite proxy to automatically forward API requests to the backend, avoiding CORS issues during development.
 
 ## 📱 Mobile-First Development
 
