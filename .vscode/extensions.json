@@ -1,0 +1,38 @@
+{
+  "recommendations": [
+    // Essential for ESLint support
+    "dbaeumer.vscode-eslint",
+    
+    // TypeScript and React development
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+    
+    // Code quality and formatting
+    "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
+    
+    // Mobile-first and accessibility development
+    "deque-systems.vscode-axe-linter",
+    
+    // CSS and styling
+    "bradlc.vscode-tailwindcss",
+    "zignd.html-css-class-completion",
+    
+    // Git integration
+    "eamodio.gitlens",
+    
+    // Development tools
+    "ms-vscode.vscode-json",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    
+    // Testing and debugging
+    "ms-vscode.vscode-jest",
+    
+    // Theme and UI
+    "PKief.material-icon-theme"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.vscode-typescript"
+  ]
+}
