@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { 
-  NumberInput, 
-  Select, 
-  Textarea, 
-  Button, 
+import {
+  NumberInput,
+  Select,
+  Textarea,
+  Button,
   Paper,
   Stack
 } from '@mantine/core';
@@ -67,10 +67,10 @@ export function AddItemForm({ onAdd, onCancel, loading = false }: AddItemFormPro
       };
 
       await onAdd(cleanedValues);
-      
+
       // Reset form on success
       form.reset();
-      
+
       notifications.show({
         title: 'Success',
         message: 'Item added successfully!',
@@ -80,7 +80,7 @@ export function AddItemForm({ onAdd, onCancel, loading = false }: AddItemFormPro
     } catch (error) {
       notifications.show({
         title: 'Error',
-        message: 'Failed to add item. Please try again.',
+        message: `Failed to add item. Please try again: ${error}`,
         color: 'red',
         icon: <IconX size={16} />,
       });
@@ -90,10 +90,10 @@ export function AddItemForm({ onAdd, onCancel, loading = false }: AddItemFormPro
   };
 
   return (
-    <Paper 
-      p="md" 
-      shadow="sm" 
-      withBorder 
+    <Paper
+      p="md"
+      shadow="sm"
+      withBorder
       className={clsx(styles.formContainer, {
         [styles.loading]: isSubmitting || loading
       })}
@@ -142,8 +142,8 @@ export function AddItemForm({ onAdd, onCancel, loading = false }: AddItemFormPro
 
           <div className={styles.actionsGroup}>
             {onCancel && (
-              <Button 
-                variant="subtle" 
+              <Button
+                variant="subtle"
                 onClick={onCancel}
                 disabled={isSubmitting || loading}
                 className={styles.cancelButton}
@@ -151,9 +151,9 @@ export function AddItemForm({ onAdd, onCancel, loading = false }: AddItemFormPro
                 Cancel
               </Button>
             )}
-            
-            <Button 
-              type="submit" 
+
+            <Button
+              type="submit"
               leftSection={<IconPlus size={16} />}
               loading={isSubmitting || loading}
               className={styles.submitButton}

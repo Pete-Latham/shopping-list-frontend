@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { 
-  NumberInput, 
-  Select, 
-  Textarea, 
-  Button, 
+import {
+  NumberInput,
+  Select,
+  Textarea,
+  Button,
   Paper,
   Stack,
   Group
@@ -69,20 +69,20 @@ export function EditItemForm({ item, onUpdate, onCancel, loading = false }: Edit
       };
 
       await onUpdate(item.id, cleanedValues);
-      
+
       notifications.show({
         title: 'Success',
         message: 'Item updated successfully!',
         color: 'green',
         icon: <IconCheck size={16} />,
       });
-      
+
       // Call onCancel to exit edit mode
       onCancel?.();
     } catch (error) {
       notifications.show({
         title: 'Error',
-        message: 'Failed to update item. Please try again.',
+        message: `Failed to add item. Please try again: ${error}`,
         color: 'red',
         icon: <IconX size={16} />,
       });
@@ -103,10 +103,10 @@ export function EditItemForm({ item, onUpdate, onCancel, loading = false }: Edit
   };
 
   return (
-    <Paper 
-      p="md" 
-      shadow="sm" 
-      withBorder 
+    <Paper
+      p="md"
+      shadow="sm"
+      withBorder
       className={clsx(styles.formContainer, {
         [styles.loading]: isSubmitting || loading
       })}
@@ -154,17 +154,17 @@ export function EditItemForm({ item, onUpdate, onCancel, loading = false }: Edit
           />
 
           <Group justify="flex-end" gap="sm" className={styles.actionsGroup}>
-            <Button 
-              variant="subtle" 
+            <Button
+              variant="subtle"
               onClick={handleCancel}
               disabled={isSubmitting || loading}
               className={styles.cancelButton}
             >
               Cancel
             </Button>
-            
-            <Button 
-              type="submit" 
+
+            <Button
+              type="submit"
               leftSection={<IconCheck size={16} />}
               loading={isSubmitting || loading}
               className={styles.submitButton}
