@@ -4,7 +4,7 @@ import styles from './DevBanner.module.css';
 // Global state for API mode (set by the API client)
 declare global {
   interface Window {
-    __DEV_API_MODE__?: 'mock' | 'real';
+    __DEV_API_MODE__?: 'mock' | 'real' | 'error';
   }
 }
 
@@ -17,7 +17,7 @@ interface DevBannerProps {
  * Only appears in development mode
  */
 export const DevBanner: React.FC<DevBannerProps> = ({ className }) => {
-  const [apiMode, setApiMode] = useState<'real' | 'mock' | 'unknown'>('unknown');
+  const [apiMode, setApiMode] = useState<'real' | 'mock' | 'error' | 'unknown'>('unknown');
   const [isVisible, setIsVisible] = useState(true);
   
   useEffect(() => {
@@ -69,6 +69,7 @@ export const DevBanner: React.FC<DevBannerProps> = ({ className }) => {
           <span className={styles.mode}>
             {apiMode === 'mock' && '• Using Mock Data (Backend not connected)'}
             {apiMode === 'real' && '• Connected to Backend API'}
+            {apiMode === 'error' && '• Backend API Error - Check Console'}
             {apiMode === 'unknown' && '• Checking API connection...'}
           </span>
         </div>

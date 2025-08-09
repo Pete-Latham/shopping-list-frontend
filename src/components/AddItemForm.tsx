@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { 
-  TextInput, 
   NumberInput, 
   Select, 
   Textarea, 
@@ -14,6 +13,7 @@ import { IconPlus, IconCheck, IconX } from '@tabler/icons-react';
 import type { CreateShoppingListItemDto } from '../types';
 import styles from './AddItemForm.module.css';
 import { clsx } from 'clsx';
+import { AutocompleteItemInput } from './AutocompleteItemInput';
 
 interface AddItemFormProps {
   onAdd: (item: CreateShoppingListItemDto) => Promise<void>;
@@ -100,11 +100,14 @@ export function AddItemForm({ onAdd, onCancel, loading = false }: AddItemFormPro
     >
       <form onSubmit={form.onSubmit(handleSubmit)} className={styles.form}>
         <Stack gap="md">
-          <TextInput
+          <AutocompleteItemInput
             label="Item Name"
             placeholder="Enter item name..."
             required
-            {...form.getInputProps('name')}
+            value={form.values.name}
+            onChange={(value) => form.setFieldValue('name', value)}
+            onBlur={() => form.validateField('name')}
+            error={form.errors.name}
           />
 
           <div className={styles.inputGroup}>

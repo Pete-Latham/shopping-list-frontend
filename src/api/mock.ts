@@ -83,6 +83,19 @@ let mockLists: ShoppingList[] = [
 let nextId = 6; // For generating new IDs
 let nextListId = 3;
 
+// Common grocery items for autocomplete suggestions
+const commonGroceryItems = [
+  'Milk', 'Bread', 'Eggs', 'Butter', 'Cheese', 'Yogurt', 'Chicken', 'Beef', 'Pork', 'Fish', 'Salmon',
+  'Apples', 'Bananas', 'Oranges', 'Strawberries', 'Blueberries', 'Grapes', 'Tomatoes', 'Carrots', 'Onions',
+  'Potatoes', 'Bell peppers', 'Broccoli', 'Spinach', 'Lettuce', 'Cucumbers', 'Mushrooms', 'Garlic', 'Ginger',
+  'Rice', 'Pasta', 'Cereal', 'Oats', 'Flour', 'Sugar', 'Salt', 'Pepper', 'Olive oil', 'Vegetable oil',
+  'Vinegar', 'Soy sauce', 'Ketchup', 'Mayonnaise', 'Mustard', 'Honey', 'Jam', 'Peanut butter', 'Nuts',
+  'Coffee', 'Tea', 'Orange juice', 'Water', 'Soda', 'Beer', 'Wine', 'Ice cream', 'Chocolate', 'Cookies',
+  'Crackers', 'Chips', 'Pretzels', 'Popcorn', 'Frozen pizza', 'Frozen vegetables', 'Canned beans',
+  'Canned tomatoes', 'Canned soup', 'Toilet paper', 'Paper towels', 'Dish soap', 'Laundry detergent',
+  'Shampoo', 'Conditioner', 'Toothpaste', 'Deodorant', 'Soap', 'Tissues'
+];
+
 // Helper to simulate network delay
 const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -216,5 +229,47 @@ export const mockShoppingListsApi = {
 
     mockLists[listIndex].items.splice(itemIndex, 1);
     mockLists[listIndex].updatedAt = new Date().toISOString();
+  },
+
+  // Get item suggestions for autocomplete
+  getItemSuggestions: async (query?: string): Promise<string[]> => {
+    await delay(150); // Faster response for autocomplete
+    console.log(`[MOCK API] Getting item suggestions for query: "${query || ''}"`); 
+    
+    if (!query || query.trim().length === 0) {
+      // Return most common items when no query
+      return commonGroceryItems.slice(0, 10);
+    }
+    
+    const normalizedQuery = query.toLowerCase().trim();
+    
+    // Get items from existing lists that match the query
+    const existingItems = mockLists
+      .flatMap(list => list.items)
+      .map(item => item.name)
+      .filter(name => name.toLowerCase().includes(normalizedQuery));
+    
+    // Get common items that match the query
+    const matchingCommonItems = commonGroceryItems
+      .filter(item => item.toLowerCase().includes(normalizedQuery));
+    
+    // Combine and deduplicate, prioritizing existing items
+    const allSuggestions = [...new Set([...existingItems, ...matchingCommonItems])];
+    
+    // Sort by relevance (starts with query first, then contains query)
+    const sortedSuggestions = allSuggestions.sort((a, b) => {
+      const aLower = a.toLowerCase();
+      const bLower = b.toLowerCase();
+      const aStartsWith = aLower.startsWith(normalizedQuery);
+      const bStartsWith = bLower.startsWith(normalizedQuery);
+      
+      if (aStartsWith && !bStartsWith) return -1;
+      if (!aStartsWith && bStartsWith) return 1;
+      
+      return a.localeCompare(b);
+    });
+    
+    // Return up to 8 suggestions
+    return sortedSuggestions.slice(0, 8);
   },
 };

@@ -8,10 +8,12 @@ services:
       context: ..
       dockerfile: Dockerfile.dev
     container_name: shopping-list-frontend-devcontainer
-    network_mode: host  # Use host network for easy backend access
+    ports:
+      - "5173:5173"  # Expose Vite dev server
     environment:
       - NODE_ENV=development
-      # Remove VITE_API_URL to use Vite proxy (/api -> localhost:3000)
+      - DOCKER_CONTAINER=true  # Flag to indicate we're running in a container
+      # Use Vite proxy (/api -> host.docker.internal:3000) when in container
     volumes:
       # Mount source code for hot reload
       - ..:/app
