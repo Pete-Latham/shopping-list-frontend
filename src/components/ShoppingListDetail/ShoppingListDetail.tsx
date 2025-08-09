@@ -110,7 +110,25 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
         description: shoppingList.description || '',
       });
     }
-  }, [shoppingList]);
+  }, [editForm, shoppingList]);
+
+  // Sort items: unchecked items first (alphabetically), then checked items (alphabetically)
+  // This must be called at the top level to follow Rules of Hooks
+  const sortedItems = React.useMemo(() => {
+    if (!shoppingList?.items || shoppingList.items.length === 0) {
+      return [];
+    }
+
+    const uncheckedItems = shoppingList.items
+      .filter(item => !item.completed)
+      .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+    
+    const checkedItems = shoppingList.items
+      .filter(item => item.completed)
+      .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+    
+    return [...uncheckedItems, ...checkedItems];
+  }, [shoppingList?.items]);
 
   // Combine CSS classes
   const containerClass = className 
@@ -138,7 +156,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
     } catch (error) {
       notifications.show({
         title: 'Error',
-        message: 'Failed to update shopping list. Please try again.',
+        message: `Failed to update shopping list. Please try again: ${error}`,
         color: 'red',
         icon: <IconX size={16} />,
       });
@@ -170,7 +188,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
     } catch (error) {
       notifications.show({
         title: 'Error',
-        message: 'Failed to delete shopping list. Please try again.',
+        message: `Failed to update shopping list. Please try again: ${error}`,
         color: 'red',
         icon: <IconX size={16} />,
       });
@@ -424,9 +442,9 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
 
         {/* Items List */}
         <div className={styles.itemsList}>
-          {shoppingList.items.length > 0 ? (
+          {sortedItems.length > 0 ? (
             <Stack gap="sm">
-              {shoppingList.items.map((item) => (
+              {sortedItems.map((item) => (
                 <ShoppingListItem
                   key={item.id}
                   item={item}
