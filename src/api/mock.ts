@@ -9,7 +9,7 @@ import type {
 } from '../types';
 
 // Mock data storage (in-memory)
-let mockLists: ShoppingList[] = [
+const mockLists: ShoppingList[] = [
   {
     id: 1,
     name: 'Weekly Groceries',
@@ -97,7 +97,7 @@ const commonGroceryItems = [
 ];
 
 // Helper to simulate network delay
-const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Mock API implementation
 export const mockShoppingListsApi = {

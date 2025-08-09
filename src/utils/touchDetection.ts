@@ -5,8 +5,8 @@
 
 export class TouchDetection {
   private static instance: TouchDetection;
-  private isTouchDevice: boolean = false;
-  private hasMouseMoved: boolean = false;
+  private isTouchDevice = false;
+  private hasMouseMoved = false;
 
   private constructor() {
     this.init();
