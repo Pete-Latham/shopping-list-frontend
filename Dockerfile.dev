@@ -1,0 +1,48 @@
+# Development Dockerfile for Shopping List Frontend
+# Optimized for hot reload and development workflow
+
+FROM node:20-alpine
+
+# Install dumb-init, curl, and git for proper signal handling, health checks, and VSCode integration
+RUN apk add --no-cache dumb-init curl git
+
+# Create app user for security with home directory for VSCode
+RUN addgroup -g 1001 -S appuser && \
+    adduser -S -u 1001 -s /bin/sh -G appuser appuser && \
+    mkdir -p /home/appuser && \
+    chown appuser:appuser /home/appuser
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files first (for better Docker layer caching)
+COPY package*.json ./
+
+# Install all dependencies (including dev dependencies)
+RUN npm ci && \
+    npm cache clean --force
+
+# Create node_modules directory and set permissions
+RUN mkdir -p node_modules && \
+    chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# Expose development server port
+EXPOSE 5173
+
+# Health check for development server
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:5173/ || exit 1
+
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["dumb-init", "--"]
+
+# Start development server with hot reload
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
+
+# Labels for metadata
+LABEL maintainer="Shopping List App" \
+      description="Development environment for Shopping List frontend" \
+      version="1.0.0-dev"

@@ -1,0 +1,120 @@
+# Development Docker Compose for Shopping List Application
+# Optimized for development workflow with hot reload
+
+version: '3.8'
+
+services:
+  # Frontend Development Service
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: shopping-list-frontend-dev
+    ports:
+      - "5173:5173"  # Vite dev server
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:3000/api
+    volumes:
+      # Mount source code for hot reload (excludes node_modules)
+      - .:/app
+      - /app/node_modules  # Anonymous volume to preserve node_modules
+      - shopping-list-node-modules:/app/node_modules  # Named volume alternative
+    depends_on:
+      backend-dev:
+        condition: service_healthy
+    networks:
+      - shopping-list-dev-network
+    restart: unless-stopped
+    stdin_open: true  # Keep container interactive
+    tty: true         # Allocate pseudo-TTY
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5173/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Backend Development Service (assumes you have backend Dockerfile.dev)
+  backend-dev:
+    image: shopping-list-backend:dev  # You'll need to build this
+    container_name: shopping-list-backend-dev
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Node.js debugging port
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres-dev
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=${DB_PASSWORD:-devpassword}
+      - DB_DATABASE=shopping_list_dev
+    volumes:
+      # Mount backend source for hot reload (if you have it)
+      - ../shopping-list-backend:/app  # Adjust path as needed
+      - /app/node_modules
+    depends_on:
+      postgres-dev:
+        condition: service_healthy
+    networks:
+      - shopping-list-dev-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Development Database
+  postgres-dev:
+    image: postgres:15-alpine
+    container_name: shopping-list-db-dev
+    ports:
+      - "5433:5432"  # Different port to avoid conflicts
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-devpassword}
+      - POSTGRES_DB=shopping_list_dev
+      - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256
+    volumes:
+      - shopping-list-postgres-dev-data:/var/lib/postgresql/data
+      - ./docker/init-dev.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - shopping-list-dev-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shopping_list_dev"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Optional: Development Tools Container
+  dev-tools:
+    image: node:20-alpine
+    container_name: shopping-list-dev-tools
+    working_dir: /app
+    volumes:
+      - .:/app
+      - shopping-list-node-modules:/app/node_modules
+    networks:
+      - shopping-list-dev-network
+    command: ["tail", "-f", "/dev/null"]  # Keep container running
+    profiles:
+      - tools  # Only start when explicitly requested
+
+# Development Networks
+networks:
+  shopping-list-dev-network:
+    driver: bridge
+    name: shopping-list-dev-network
+
+# Development Volumes
+volumes:
+  shopping-list-postgres-dev-data:
+    driver: local
+    name: shopping-list-postgres-dev-data
+  shopping-list-node-modules:
+    driver: local
+    name: shopping-list-node-modules

@@ -1,0 +1,207 @@
+/* DevBanner.module.css - Mobile-First Development Banner */
+
+/* 
+ * MOBILE BASE STYLES (no media query)
+ * Small, non-intrusive banner for mobile
+ */
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: white;
+  font-size: 0.75rem;
+  
+  animation: slideDown 0.3s ease-out;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  max-width: 100%;
+}
+
+.icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.text strong {
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.mode {
+  font-size: 0.7rem;
+  opacity: 0.9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.2rem;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+  
+  min-height: 24px;
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:active {
+  opacity: 1;
+  transform: scale(0.9);
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* 
+ * TABLET PORTRAIT (481px and up)
+ * More space available, enhance the banner
+ */
+@media (min-width: 481px) {
+  .container {
+    font-size: 0.875rem;
+  }
+  
+  .content {
+    padding: 0.75rem 1.5rem;
+    gap: 0.75rem;
+  }
+  
+  .text {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .text strong {
+    font-size: 0.875rem;
+  }
+  
+  .mode {
+    font-size: 0.8rem;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: initial;
+  }
+  
+  .closeButton {
+    min-height: 28px;
+    min-width: 28px;
+  }
+}
+
+/* 
+ * TABLET LANDSCAPE / DESKTOP (769px and up)
+ * Full banner with hover effects
+ */
+@media (min-width: 769px) {
+  .container {
+    font-size: 0.9rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+  
+  .content {
+    padding: 1rem 2rem;
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .icon {
+    font-size: 1.25rem;
+  }
+  
+  .text strong {
+    font-size: 1rem;
+  }
+  
+  .mode {
+    font-size: 0.875rem;
+  }
+  
+  .closeButton:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+  }
+  
+  .closeButton:active {
+    transform: translateY(0);
+  }
+}
+
+/* 
+ * DARK THEME SUPPORT
+ * Adjust colors for dark mode
+ */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background: linear-gradient(135deg, #d63384, #fd7e14);
+  }
+}
+
+/* 
+ * REDUCED MOTION SUPPORT
+ * Respect user's motion preferences
+ */
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    animation: none;
+  }
+  
+  .closeButton {
+    transition: none;
+  }
+  
+  .closeButton:hover,
+  .closeButton:active {
+    transform: none;
+  }
+}
+
+/* 
+ * HIGH CONTRAST SUPPORT
+ * Ensure accessibility in high contrast mode
+ */
+@media (prefers-contrast: high) {
+  .container {
+    background: #ff0000;
+    border-bottom: 2px solid #ffffff;
+  }
+  
+  .closeButton {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+}

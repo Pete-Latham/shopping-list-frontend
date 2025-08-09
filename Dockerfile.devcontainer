@@ -1,0 +1,45 @@
+# Alternative Dockerfile for VSCode Dev Containers
+# Uses Ubuntu base to avoid Alpine Linux compatibility issues with dev container features
+
+FROM node:20
+
+# Install additional tools for development
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    wget \
+    vim \
+    nano \
+    less \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app user for security
+RUN groupadd -g 1000 appuser && \
+    useradd -m -g appuser -u 1000 -s /bin/bash appuser
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files first (for better Docker layer caching)
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci && \
+    npm cache clean --force
+
+# Change ownership of app directory
+RUN chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# Expose development server port
+EXPOSE 5173
+
+# Start development server
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
+
+# Labels for metadata
+LABEL maintainer="Shopping List App" \
+      description="Ubuntu-based dev container environment" \
+      version="1.0.0-devcontainer"

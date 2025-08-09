@@ -9,6 +9,7 @@ import { ShoppingListCard } from './components/ShoppingListCard';
 import { ShoppingListDetail } from './components/ShoppingListDetail';
 import { ShoppingListForm } from './components/ShoppingListForm';
 import { DeleteConfirmation } from './components/DeleteConfirmation';
+import { DevBanner } from './components/DevBanner';
 import type { ShoppingList, CreateShoppingListDto, UpdateShoppingListDto } from './types';
 import styles from './App.module.css';
 
@@ -113,6 +114,7 @@ const App: React.FC = () => {
 
   return (
     <>
+      <DevBanner />
       <div className={`${styles.app} mobile-safe-area`}>
         <header className={styles.appHeader}>
           <h1>🛒 Shopping Lists</h1>

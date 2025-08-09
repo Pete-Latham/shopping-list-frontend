@@ -1,0 +1,56 @@
+{
+  "name": "Shopping List Frontend (Simple)",
+  "build": {
+    "dockerfile": "../Dockerfile.dev"
+  },
+  "workspaceFolder": "/app",
+  
+  // Features disabled for Alpine compatibility
+  // "features": {},
+
+  // Mount source code
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/app,type=bind",
+    "source=shopping-list-frontend-node-modules,target=/app/node_modules,type=volume"
+  ],
+
+  // VSCode settings
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "sh",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        }
+      },
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "ms-vscode.vscode-typescript-next"
+      ]
+    }
+  },
+
+  // Forward Vite dev server port
+  "forwardPorts": [5173],
+  "portsAttributes": {
+    "5173": {
+      "label": "Vite Dev Server",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  // Environment variables
+  "containerEnv": {
+    "NODE_ENV": "development",
+    "VITE_API_URL": "http://host.docker.internal:3000"
+  },
+
+  // Commands
+  "postCreateCommand": "npm install",
+  "postStartCommand": "npm run dev -- --host 0.0.0.0",
+
+  // User settings
+  "remoteUser": "appuser"
+}

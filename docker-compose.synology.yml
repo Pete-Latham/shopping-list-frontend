@@ -1,0 +1,58 @@
+# Simplified Docker Compose for Synology Container Manager
+# This version is optimized for the Container Manager UI
+
+version: '3.8'
+
+services:
+  # Frontend Service
+  shopping-list-frontend:
+    build: .
+    container_name: shopping-list-frontend
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - shopping-list-backend
+    restart: unless-stopped
+    networks:
+      - shopping-list-net
+
+  # Backend Service
+  shopping-list-backend:
+    image: shopping-list-backend:latest
+    container_name: shopping-list-backend
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=shopping-list-db
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password  # Change this!
+      - DB_DATABASE=shopping_list
+    depends_on:
+      - shopping-list-db
+    restart: unless-stopped
+    networks:
+      - shopping-list-net
+
+  # Database Service
+  shopping-list-db:
+    image: postgres:15-alpine
+    container_name: shopping-list-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password  # Change this!
+      - POSTGRES_DB=shopping_list
+    volumes:
+      - shopping-list-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - shopping-list-net
+
+networks:
+  shopping-list-net:
+    driver: bridge
+
+volumes:
+  shopping-list-data:
+    driver: local

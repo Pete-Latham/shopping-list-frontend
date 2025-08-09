@@ -1,0 +1,42 @@
+# Simplified Docker Compose for Dev Containers
+# This removes complex dependencies that can cause issues
+
+services:
+  # Frontend Development Service (for dev containers)
+  frontend-dev:
+    build:
+      context: ..
+      dockerfile: Dockerfile.dev
+    container_name: shopping-list-frontend-devcontainer
+    network_mode: host  # Use host network for easy backend access
+    environment:
+      - NODE_ENV=development
+      # Remove VITE_API_URL to use Vite proxy (/api -> localhost:3000)
+    volumes:
+      # Mount source code for hot reload
+      - ..:/app
+      - /app/node_modules  # Preserve node_modules
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+  # Optional: Development Database (can be started separately)
+  postgres-dev:
+    image: postgres:15-alpine
+    container_name: shopping-list-db-devcontainer
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=devpassword
+      - POSTGRES_DB=shopping_list_dev
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+      - ../docker/init-dev.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    restart: unless-stopped
+    profiles:
+      - database  # Only start when explicitly requested
+
+volumes:
+  postgres-dev-data:
+    driver: local

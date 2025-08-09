@@ -1,0 +1,89 @@
+{
+  "name": "Shopping List Frontend Development",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "frontend-dev",
+  "workspaceFolder": "/app",
+  
+  // Features are disabled due to Alpine Linux compatibility issues
+  // Git is already available in the base node:20-alpine image
+  // "features": {},
+
+  // VSCode settings for the container
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "sh",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "emmet.includeLanguages": {
+          "typescript": "html",
+          "typescriptreact": "html"
+        },
+        "remote.portsAttributes": {
+          "5173": {
+            "label": "Vite Dev Server",
+            "onAutoForward": "openPreview"
+          }
+        }
+      },
+      
+      // Extensions to install automatically
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-typescript-next",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "ms-vscode.vscode-json",
+        "ms-docker.docker",
+        "ms-vscode.vscode-docker"
+      ]
+    }
+  },
+
+  // Ports to forward from the container to the host
+  "forwardPorts": [5173, 3000, 5433],
+  "portsAttributes": {
+    "5173": {
+      "label": "Vite Dev Server",
+      "onAutoForward": "notify",
+      "protocol": "http",
+      "requireLocalPort": true
+    },
+    "3000": {
+      "label": "Backend API"
+    },
+    "5433": {
+      "label": "PostgreSQL Dev DB"
+    }
+  },
+
+  // Commands to run after the container is created
+  "postCreateCommand": "npm install",
+  
+  // Commands to run when the container starts
+  "postStartCommand": "npm run dev",
+
+  // Keep container running even if no process is running
+  "shutdownAction": "none",
+
+  // Mount the Docker socket for Docker-in-Docker scenarios
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
+
+  // Environment variables
+  "containerEnv": {
+    "NODE_ENV": "development"
+  },
+
+  // Run as root to avoid VSCode permission issues
+  // "remoteUser": "appuser",
+  
+  // Enable init process to handle signals properly
+  "init": true
+}

@@ -1,0 +1,28 @@
+# Frontend-only Development Docker Compose
+# Use this when you want to run only the frontend in a container
+# while running backend/database natively
+
+version: '3.8'
+
+services:
+  # Frontend Development Service
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: shopping-list-frontend-dev
+    ports:
+      - "5173:5173"  # Vite dev server
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://host.docker.internal:3000  # Access host machine
+    volumes:
+      # Mount source code for hot reload
+      - .:/app
+      - /app/node_modules  # Preserve node_modules
+    restart: unless-stopped
+    stdin_open: true  # Keep container interactive
+    tty: true         # Allocate pseudo-TTY
+    # Use host networking to access services on host machine
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

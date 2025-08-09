@@ -1,0 +1,71 @@
+{
+  "name": "Shopping List Frontend (Ubuntu)",
+  "build": {
+    "dockerfile": "../Dockerfile.devcontainer"
+  },
+  "workspaceFolder": "/app",
+  
+  // Features that work with Ubuntu base
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  // Mount source code
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/app,type=bind",
+    "source=shopping-list-frontend-node-modules-ubuntu,target=/app/node_modules,type=volume"
+  ],
+
+  // VSCode settings
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "emmet.includeLanguages": {
+          "typescript": "html",
+          "typescriptreact": "html"
+        }
+      },
+      
+      // Extensions to install automatically
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-typescript-next",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "ms-vscode.vscode-json",
+        "ms-docker.docker",
+        "ms-vscode.vscode-docker"
+      ]
+    }
+  },
+
+  // Forward Vite dev server port
+  "forwardPorts": [5173],
+  "portsAttributes": {
+    "5173": {
+      "label": "Vite Dev Server",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  // Environment variables
+  "containerEnv": {
+    "NODE_ENV": "development",
+    "VITE_API_URL": "http://host.docker.internal:3000"
+  },
+
+  // Commands
+  "postCreateCommand": "npm install",
+  "postStartCommand": "npm run dev -- --host 0.0.0.0",
+
+  // User settings
+  "remoteUser": "appuser"
+}

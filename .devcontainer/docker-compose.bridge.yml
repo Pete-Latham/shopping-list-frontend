@@ -1,0 +1,55 @@
+# Alternative Docker Compose for Dev Containers using bridge network
+# Use this if host network mode doesn't work
+
+services:
+  # Frontend Development Service (for dev containers)
+  frontend-dev:
+    build:
+      context: ..
+      dockerfile: Dockerfile.dev
+    container_name: shopping-list-frontend-devcontainer-bridge
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://host.docker.internal:3000
+    volumes:
+      # Mount source code for hot reload
+      - ..:/app
+      - /app/node_modules  # Preserve node_modules
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    # Use Docker Desktop's host gateway feature
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    # Add additional DNS settings
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    # Ensure container has network access
+    cap_add:
+      - NET_ADMIN
+    security_opt:
+      - seccomp:unconfined
+
+  # Optional: Development Database (can be started separately)
+  postgres-dev:
+    image: postgres:15-alpine
+    container_name: shopping-list-db-devcontainer-bridge
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=devpassword
+      - POSTGRES_DB=shopping_list_dev
+    volumes:
+      - postgres-dev-data-bridge:/var/lib/postgresql/data
+      - ../docker/init-dev.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    restart: unless-stopped
+    profiles:
+      - database  # Only start when explicitly requested
+
+volumes:
+  postgres-dev-data-bridge:
+    driver: local

@@ -12,15 +12,21 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => {
           const rewritten = path.replace(/^\/api/, '');
-          console.log(`[PROXY] ${path} -> ${rewritten}`);
+          if (typeof console !== 'undefined') {
+            console.log(`[PROXY] ${path} -> ${rewritten}`);
+          }
           return rewritten;
         },
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, _res) => {
-            console.log('[PROXY ERROR]', err);
+            if (typeof console !== 'undefined') {
+              console.log('[PROXY ERROR]', err);
+            }
           });
           proxy.on('proxyReq', (proxyReq, req, _res) => {
-            console.log('[PROXY REQ]', req.method, req.url, '->', proxyReq.path);
+            if (typeof console !== 'undefined') {
+              console.log('[PROXY REQ]', req.method, req.url, '->', proxyReq.path);
+            }
           });
         },
       },
