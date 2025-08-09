@@ -27,7 +27,7 @@ import {
   IconAlertCircle,
   IconTrash
 } from '@tabler/icons-react';
-import type { UpdateShoppingListDto, CreateShoppingListItemDto } from '../../types';
+import type { UpdateShoppingListDto, CreateShoppingListItemDto, UpdateShoppingListItemDto } from '../../types';
 import { ShoppingListItem } from '../ShoppingListItem';
 import { AddItemForm } from '../AddItemForm';
 import {
@@ -83,6 +83,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingItemId, setEditingItemId] = useState<number | null>(null);
   const [deleteModalOpened, { open: openDeleteModal, close: closeDeleteModal }] = useDisclosure(false);
 
   // API hooks
@@ -195,6 +196,26 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
 
   const handleDeleteItem = async (itemId: number) => {
     await deleteItemMutation.mutateAsync({ listId, itemId });
+  };
+
+  const handleEditItem = (itemId: number) => {
+    setEditingItemId(itemId);
+    // Close the add form if it's open
+    setShowAddForm(false);
+  };
+
+  const handleUpdateItem = async (itemId: number, data: UpdateShoppingListItemDto) => {
+    await updateItemMutation.mutateAsync({
+      listId,
+      itemId,
+      data
+    });
+    // Exit edit mode after successful update
+    setEditingItemId(null);
+  };
+
+  const handleCancelEditItem = () => {
+    setEditingItemId(null);
   };
 
   // Loading state
@@ -411,10 +432,11 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
                   item={item}
                   onToggleComplete={handleToggleItem}
                   onDelete={handleDeleteItem}
-                  onEdit={(itemId) => {
-                    // TODO: Implement item editing
-                    console.log('Edit item:', itemId);
-                  }}
+                  onEdit={handleEditItem}
+                  onUpdate={handleUpdateItem}
+                  editingItemId={editingItemId}
+                  onCancelEdit={handleCancelEditItem}
+                  updateLoading={updateItemMutation.isPending}
                 />
               ))}
             </Stack>

@@ -1,6 +1,7 @@
 import { Group, Text, Checkbox, Badge, ActionIcon, Paper } from '@mantine/core';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
-import type { ShoppingListItem as ShoppingListItemType } from '../types';
+import type { ShoppingListItem as ShoppingListItemType, UpdateShoppingListItemDto } from '../types';
+import { EditItemForm } from './EditItemForm';
 import styles from './ShoppingListItem.module.css';
 import { clsx } from 'clsx';
 
@@ -9,17 +10,43 @@ interface ShoppingListItemProps {
   onToggleComplete?: (itemId: number, completed: boolean) => void;
   onDelete?: (itemId: number) => void;
   onEdit?: (itemId: number) => void;
+  onUpdate?: (itemId: number, data: UpdateShoppingListItemDto) => Promise<void>;
+  editingItemId?: number | null;
+  onCancelEdit?: () => void;
+  updateLoading?: boolean;
 }
 
 export const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
   item,
   onToggleComplete,
   onDelete,
-  onEdit
+  onEdit,
+  onUpdate,
+  editingItemId,
+  onCancelEdit,
+  updateLoading = false
 }) => {
   const handleToggle = () => {
     onToggleComplete?.(item.id, !item.completed);
   };
+
+  const handleUpdate = async (itemId: number, data: UpdateShoppingListItemDto) => {
+    if (onUpdate) {
+      await onUpdate(itemId, data);
+    }
+  };
+
+  // If this item is being edited, show the edit form
+  if (editingItemId === item.id && onUpdate) {
+    return (
+      <EditItemForm
+        item={item}
+        onUpdate={handleUpdate}
+        onCancel={onCancelEdit}
+        loading={updateLoading}
+      />
+    );
+  }
 
   return (
     <Paper 
