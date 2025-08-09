@@ -8,7 +8,10 @@
 }
 
 .appHeader {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   margin-bottom: 1.5rem;
   padding: 0 0.5rem;
 }
@@ -72,6 +75,71 @@
   color: var(--mantine-color-red-6);
 }
 
+/* Create buttons - Mobile-first */
+.createButton {
+  /* Mobile-friendly touch target */
+  min-height: 44px;
+  min-width: 120px;
+  padding: 0.75rem 1.5rem;
+  
+  /* Styling */
+  background: var(--mantine-color-blue-6);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  
+  /* Touch feedback */
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: rgba(100, 108, 255, 0.1);
+}
+
+.createButton:active {
+  transform: scale(0.98);
+  background: var(--mantine-color-blue-7);
+}
+
+.createButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.createButtonLarge {
+  /* Mobile-friendly touch target */
+  min-height: 48px;
+  width: 100%;
+  max-width: 300px;
+  padding: 1rem 2rem;
+  margin-top: 1.5rem;
+  
+  /* Styling */
+  background: var(--mantine-color-blue-6);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  
+  /* Touch feedback */
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: rgba(100, 108, 255, 0.1);
+}
+
+.createButtonLarge:active {
+  transform: scale(0.98);
+  background: var(--mantine-color-blue-7);
+}
+
+.createButtonLarge:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Tablet styles (portrait) */
 @media (min-width: 481px) {
   .app {
@@ -79,6 +147,8 @@
   }
   
   .appHeader {
+    flex-direction: row;
+    justify-content: space-between;
     margin-bottom: 2rem;
   }
   
@@ -100,6 +170,10 @@
     padding: 4rem 2rem;
     font-size: 1.1rem;
   }
+  
+  .createButton {
+    font-size: 1rem;
+  }
 }
 
 /* Tablet landscape and small desktop */
@@ -117,6 +191,24 @@
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     max-width: 1200px;
   }
+  
+  .createButton:hover {
+    background: var(--mantine-color-blue-7);
+    transform: translateY(-1px);
+  }
+  
+  .createButton:active {
+    transform: translateY(0);
+  }
+  
+  .createButtonLarge:hover {
+    background: var(--mantine-color-blue-7);
+    transform: translateY(-1px);
+  }
+  
+  .createButtonLarge:active {
+    transform: translateY(0);
+  }
 }
 
 /* Large desktop */
@@ -128,5 +220,23 @@
   .shoppingListsGrid {
     grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
     gap: 2rem;
+  }
+}
+
+/* 
+ * REDUCED MOTION SUPPORT
+ * Respect user's motion preferences
+ */
+@media (prefers-reduced-motion: reduce) {
+  .createButton,
+  .createButtonLarge {
+    transition: none;
+  }
+  
+  .createButton:hover,
+  .createButton:active,
+  .createButtonLarge:hover,
+  .createButtonLarge:active {
+    transform: none;
   }
 }
