@@ -20,15 +20,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const initAuth = async () => {
       try {
-        console.log('[AUTH] Initializing authentication...');
         // Check authentication status from backend
         const status = await authApi.getStatus();
-        console.log('[AUTH] Status response:', status);
         setAuthEnabled(status.authEnabled);
 
         // If auth is disabled, set up mock user
         if (!status.authEnabled) {
-          console.log('[AUTH] Authentication disabled, setting up mock user');
           const mockUser = { id: 1, email: 'dev@example.com', username: 'dev' };
           setUser(mockUser);
           setToken('mock-token');
@@ -42,14 +39,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         if (storedToken && storedUser) {
           try {
-            console.log('[AUTH] Verifying existing token...');
             // Verify token is still valid
             const profile = await authApi.getProfile();
             setUser(profile);
             setToken(storedToken);
-            console.log('[AUTH] Token verified, user logged in');
           } catch (error) {
-            console.log('[AUTH] Token invalid, clearing stored data');
             // Token invalid, clear stored data
             localStorage.removeItem('auth_token');
             localStorage.removeItem('auth_refresh_token');
@@ -57,12 +51,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
         }
       } catch (error) {
-        console.error('[AUTH] Failed to initialize auth:', error);
+        console.error('Failed to initialize auth:', error);
         // Fallback: assume auth is enabled and proceed without auto-login
-        console.log('[AUTH] Using fallback: assuming auth is enabled');
         setAuthEnabled(true);
       } finally {
-        console.log('[AUTH] Initialization complete');
         setIsInitialized(true);
       }
     };
