@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { authApi } from '../api/auth';
+import { authClient } from '../api/authClient';
 import type { User, LoginRequest, RegisterRequest, ChangePasswordRequest, AuthContextType } from '../types/auth';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -51,6 +52,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             console.log('[AUTH] Token invalid, clearing stored data');
             // Token invalid, clear stored data
             localStorage.removeItem('auth_token');
+            localStorage.removeItem('auth_refresh_token');
             localStorage.removeItem('auth_user');
           }
         }
@@ -77,6 +79,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       if (authEnabled) {
         localStorage.setItem('auth_token', response.access_token);
+        localStorage.setItem('auth_refresh_token', response.refresh_token);
         localStorage.setItem('auth_user', JSON.stringify(response.user));
       }
 
@@ -118,10 +121,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      // Call backend logout if auth is enabled
+      if (authEnabled) {
+        await authApi.logout();
+      }
+    } catch (error) {
+      // Log error but don't prevent logout
+      console.error('Logout API call failed:', error);
+    }
+    
+    // Clear local state and storage
     setUser(null);
     setToken(null);
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_refresh_token');
     localStorage.removeItem('auth_user');
     
     notifications.show({

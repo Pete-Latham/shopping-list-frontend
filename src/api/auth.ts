@@ -3,7 +3,9 @@ import type {
   LoginRequest,
   RegisterRequest,
   ChangePasswordRequest,
+  RefreshTokenRequest,
   LoginResponse,
+  RefreshTokenResponse,
   User,
   AuthStatus,
 } from '../types/auth';
@@ -35,6 +37,7 @@ authClient.interceptors.response.use(
     if (error.response?.status === 401) {
       // Clear auth data on 401 responses
       localStorage.removeItem('auth_token');
+      localStorage.removeItem('auth_refresh_token');
       localStorage.removeItem('auth_user');
     }
     return Promise.reject(error);
@@ -61,4 +64,12 @@ export const authApi = {
   // Change password
   changePassword: (passwords: ChangePasswordRequest): Promise<{ message: string }> =>
     authClient.post('/auth/change-password', passwords).then(res => res.data),
+
+  // Refresh tokens
+  refreshTokens: (refreshData: RefreshTokenRequest): Promise<RefreshTokenResponse> =>
+    authClient.post('/auth/refresh', refreshData).then(res => res.data),
+
+  // Logout
+  logout: (): Promise<{ message: string }> =>
+    authClient.post('/auth/logout').then(res => res.data),
 };

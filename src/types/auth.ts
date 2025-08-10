@@ -22,7 +22,17 @@ export interface ChangePasswordRequest {
 
 export interface LoginResponse {
   access_token: string;
+  refresh_token: string;
   user: User;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponse {
+  access_token: string;
+  refresh_token: string;
 }
 
 export interface AuthStatus {

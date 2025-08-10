@@ -10,4 +10,4 @@
 
 - [ ] Add Infisical for secrets management
 
-- [ ] Have we got JWT renewal?
+- [x] Have we got JWT refresh?
