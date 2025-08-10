@@ -111,7 +111,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
         description: shoppingList.description ?? '',
       });
     }
-  }, [editForm, shoppingList]);
+  }, [shoppingList]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Sort items: unchecked items first (alphabetically), then checked items (alphabetically)
   // This must be called at the top level to follow Rules of Hooks
