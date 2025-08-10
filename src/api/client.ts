@@ -11,7 +11,7 @@ import { mockShoppingListsApi } from './mock';
 
 // Use proxy in development, allow override with environment variable
 // If VITE_API_URL is not set, use '/api' which will be proxied by Vite
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api';
 
 // Only use mock API when explicitly requested with VITE_USE_MOCK_API=true
 // This prevents masking backend connection issues with automatic fallback
@@ -22,7 +22,32 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 5000, // 5 second timeout for all requests
 });
+
+// Request interceptor to add auth token
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('auth_token');
+  if (token && token !== 'mock-token') {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Response interceptor to handle auth errors
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Clear auth data on 401 responses
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('auth_user');
+      // Optionally redirect to login or refresh the page
+      window.location.reload();
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Request interceptor for debugging
 // apiClient.interceptors.request.use((config) => {

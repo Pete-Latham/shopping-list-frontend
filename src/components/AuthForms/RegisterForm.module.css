@@ -1,0 +1,358 @@
+/* RegisterForm.module.css - Mobile-First */
+
+/* 
+ * MOBILE BASE STYLES (no media query)
+ * Start here - these are the mobile styles
+ */
+.container {
+  /* Mobile layout */
+  width: 100%;
+  max-width: 100%;
+  padding: 1rem;
+  margin: 0 auto;
+  
+  /* Mobile-optimized spacing */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  
+  /* Center in viewport */
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  
+  /* Touch-friendly interactions */
+  -webkit-tap-highlight-color: rgba(100, 108, 255, 0.1);
+}
+
+.formCard {
+  width: 100%;
+  max-width: 100%;
+  padding: 1.5rem;
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-gray-2);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--mantine-color-text);
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--mantine-color-dimmed);
+  line-height: 1.5;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mantine-color-text);
+  margin-bottom: 0.25rem;
+}
+
+.input {
+  /* Mobile-friendly touch targets */
+  min-height: 48px;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--mantine-color-gray-3);
+  background: var(--mantine-color-body);
+  color: var(--mantine-color-text);
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--mantine-color-blue-5);
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.1);
+}
+
+.input:invalid {
+  border-color: var(--mantine-color-red-5);
+}
+
+.input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  /* Mobile-friendly touch targets */
+  min-height: 48px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--mantine-color-blue-6);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.submitButton:hover {
+  background: var(--mantine-color-blue-7);
+}
+
+.submitButton:active {
+  transform: scale(0.98);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mantine-color-gray-2);
+}
+
+.footerText {
+  font-size: 0.875rem;
+  color: var(--mantine-color-dimmed);
+  margin-bottom: 0.5rem;
+}
+
+.switchButton {
+  background: none;
+  border: none;
+  color: var(--mantine-color-blue-6);
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  /* Mobile-friendly touch target */
+  min-height: 44px;
+  min-width: 100px;
+}
+
+.switchButton:hover {
+  background: rgba(100, 108, 255, 0.1);
+  text-decoration: none;
+}
+
+.switchButton:active {
+  transform: scale(0.95);
+}
+
+.switchButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  color: var(--mantine-color-red-6);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  background: rgba(255, 0, 0, 0.05);
+  border: 1px solid rgba(255, 0, 0, 0.1);
+  border-radius: 0.25rem;
+}
+
+.passwordHint {
+  font-size: 0.75rem;
+  color: var(--mantine-color-dimmed);
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  background: rgba(100, 108, 255, 0.05);
+  border: 1px solid rgba(100, 108, 255, 0.1);
+  border-radius: 0.25rem;
+  line-height: 1.4;
+}
+
+/* Tablet portrait (481px and up) */
+@media (min-width: 481px) {
+  .container {
+    padding: 2rem;
+  }
+  
+  .formCard {
+    max-width: 420px;
+    padding: 2rem;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .input {
+    min-height: 44px;
+    font-size: 0.95rem;
+  }
+  
+  .submitButton {
+    min-height: 44px;
+    font-size: 0.95rem;
+  }
+  
+  .switchButton {
+    min-height: 40px;
+  }
+}
+
+/* Tablet landscape and desktop (769px and up) */
+@media (min-width: 769px) {
+  .container {
+    padding: 3rem;
+  }
+  
+  .formCard {
+    max-width: 440px;
+    padding: 2.5rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .form {
+    gap: 1.25rem;
+  }
+  
+  /* Desktop hover effects */
+  .submitButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(100, 108, 255, 0.3);
+  }
+  
+  .submitButton:active {
+    transform: translateY(0);
+  }
+  
+  .switchButton:hover {
+    transform: translateY(-1px);
+  }
+  
+  .switchButton:active {
+    transform: translateY(0);
+  }
+}
+
+/* Large desktop (1201px and up) */
+@media (min-width: 1201px) {
+  .formCard {
+    max-width: 480px;
+    padding: 3rem;
+  }
+  
+  .title {
+    font-size: 2.25rem;
+  }
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .formCard {
+    background: var(--mantine-color-dark-7);
+    border-color: var(--mantine-color-dark-4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  .input {
+    background: var(--mantine-color-dark-6);
+    border-color: var(--mantine-color-dark-4);
+    color: var(--mantine-color-text);
+  }
+  
+  .input:focus {
+    border-color: var(--mantine-color-blue-4);
+    box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+  }
+  
+  .footer {
+    border-color: var(--mantine-color-dark-4);
+  }
+  
+  .errorMessage {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: rgba(255, 0, 0, 0.2);
+  }
+  
+  .passwordHint {
+    background: rgba(100, 108, 255, 0.1);
+    border-color: rgba(100, 108, 255, 0.2);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .submitButton,
+  .switchButton {
+    transition: none;
+  }
+  
+  .submitButton:active,
+  .switchButton:active {
+    transform: none;
+  }
+  
+  /* Desktop hover effects disabled */
+  @media (min-width: 769px) {
+    .submitButton:hover,
+    .submitButton:active,
+    .switchButton:hover,
+    .switchButton:active {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .formCard,
+  .input,
+  .submitButton,
+  .errorMessage,
+  .passwordHint {
+    border: 2px solid;
+  }
+  
+  .footer {
+    border-top: 2px solid;
+  }
+}
+
+/* Focus indicators for accessibility */
+.input:focus-visible,
+.submitButton:focus-visible,
+.switchButton:focus-visible {
+  outline: 2px solid var(--mantine-color-blue-5);
+  outline-offset: 2px;
+}

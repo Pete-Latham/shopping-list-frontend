@@ -7,11 +7,9 @@ export default defineConfig({
   server: {
     proxy: {
       // Proxy API requests to avoid CORS issues during development
-      // Use host.docker.internal when running in Docker container
+      // Use backend container name when running in the same Docker network
       '/api': {
-        target: process.env.NODE_ENV === 'development' && process.env.DOCKER_CONTAINER
-          ? 'http://host.docker.internal:3000'
-          : 'http://localhost:3000',
+        target: process.env.DOCKER_CONTAINER ? 'http://shopping-list-backend:3000' : 'http://localhost:3000',
         changeOrigin: true,
         rewrite: (path) => {
           const rewritten = path.replace(/^\/api/, '');

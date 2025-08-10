@@ -15,10 +15,11 @@ export const shoppingListKeys = {
 };
 
 // Get all shopping lists
-export const useShoppingLists = () => {
+export const useShoppingLists = (enabled: boolean = true) => {
   return useQuery({
     queryKey: shoppingListKeys.lists(),
     queryFn: shoppingListsApi.getAll,
+    enabled,
   });
 };
 

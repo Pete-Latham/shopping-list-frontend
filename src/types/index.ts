@@ -46,6 +46,6 @@ export interface UpdateShoppingListItemDto {
 // Global Window interface extension for development features
 declare global {
   interface Window {
-    __DEV_API_MODE__?: 'mock' | 'real';
+    __DEV_API_MODE__?: 'mock' | 'real' | 'error';
   }
 }

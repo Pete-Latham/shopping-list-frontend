@@ -13,7 +13,7 @@ services:
     environment:
       - NODE_ENV=development
       - DOCKER_CONTAINER=true  # Flag to indicate we're running in a container
-      # Use Vite proxy (/api -> host.docker.internal:3000) when in container
+      # Use Vite proxy (/api -> backend service name) when in container
     volumes:
       # Mount source code for hot reload
       - ..:/app
@@ -21,6 +21,8 @@ services:
     restart: unless-stopped
     stdin_open: true
     tty: true
+    networks:
+      - shopping-list-network
 
   # Optional: Development Database (can be started separately)
   postgres-dev:
@@ -38,7 +40,13 @@ services:
     restart: unless-stopped
     profiles:
       - database  # Only start when explicitly requested
+    networks:
+      - shopping-list-network
 
 volumes:
   postgres-dev-data:
     driver: local
+
+networks:
+  shopping-list-network:
+    external: true

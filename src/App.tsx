@@ -10,16 +10,22 @@ import { ShoppingListDetail } from './components/ShoppingListDetail';
 import { ShoppingListForm } from './components/ShoppingListForm';
 import { DeleteConfirmation } from './components/DeleteConfirmation';
 import { DevBanner } from './components/DevBanner';
+import { AuthPage } from './components/AuthForms';
+import { UserMenu } from './components/UserMenu';
+import { useAuth } from './contexts/AuthContext';
 import type { ShoppingList, CreateShoppingListDto, UpdateShoppingListDto } from './types';
 import styles from './App.module.css';
 
 const App: React.FC = () => {
+  const { isAuthenticated, authEnabled } = useAuth();
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingList, setEditingList] = useState<ShoppingList | null>(null);
   const [deletingList, setDeletingList] = useState<ShoppingList | null>(null);
   
-  const { data: shoppingLists, isLoading, error } = useShoppingLists();
+  // Only fetch shopping lists if user is authenticated or auth is disabled
+  const shouldFetchLists = !authEnabled || isAuthenticated;
+  const { data: shoppingLists, isLoading, error } = useShoppingLists(shouldFetchLists);
   const createListMutation = useCreateShoppingList();
   const updateListMutation = useUpdateShoppingList();
   const deleteListMutation = useDeleteShoppingList();
@@ -97,6 +103,11 @@ const App: React.FC = () => {
     setDeletingList(null);
   };
 
+  // Show authentication form if auth is enabled and user is not authenticated
+  if (authEnabled && !isAuthenticated) {
+    return <AuthPage />;
+  }
+
   // Show detail view if a list is selected
   if (selectedListId) {
     return (
@@ -118,13 +129,16 @@ const App: React.FC = () => {
       <div className={`${styles.app} mobile-safe-area`}>
         <header className={styles.appHeader}>
           <h1>🛒 Shopping Lists</h1>
-          <button 
-            className={styles.createButton}
-            onClick={handleCreateList}
-            aria-label="Create new shopping list"
-          >
-            + New List
-          </button>
+          <div className={styles.headerActions}>
+            <button 
+              className={styles.createButton}
+              onClick={handleCreateList}
+              aria-label="Create new shopping list"
+            >
+              + New List
+            </button>
+            <UserMenu />
+          </div>
         </header>
         
         <main className={styles.mainContent}>

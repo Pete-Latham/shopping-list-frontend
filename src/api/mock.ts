@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Mock API for frontend-only development
 import type {
   ShoppingList,
@@ -175,7 +176,7 @@ export const mockShoppingListsApi = {
     const newItem: ShoppingListItem = {
       id: nextId++,
       name: data.name,
-      quantity: data.quantity || 1,
+      quantity: data.quantity ?? 1,
       unit: data.unit,
       completed: false,
       notes: data.notes,
@@ -234,7 +235,7 @@ export const mockShoppingListsApi = {
   // Get item suggestions for autocomplete
   getItemSuggestions: async (query?: string): Promise<string[]> => {
     await delay(150); // Faster response for autocomplete
-    console.log(`[MOCK API] Getting item suggestions for query: "${query || ''}"`); 
+    console.log(`[MOCK API] Getting item suggestions for query: "${query ?? ''}"`); 
     
     if (!query || query.trim().length === 0) {
       // Return most common items when no query

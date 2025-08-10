@@ -30,6 +30,7 @@ import {
 import type { UpdateShoppingListDto, CreateShoppingListItemDto, UpdateShoppingListItemDto } from '../../types';
 import { ShoppingListItem } from '../ShoppingListItem';
 import { AddItemForm } from '../AddItemForm';
+import { UserMenu } from '../UserMenu';
 import {
   useShoppingList,
   useUpdateShoppingList,
@@ -45,17 +46,17 @@ export interface ShoppingListDetailProps {
    * Shopping list ID to display
    */
   listId: number;
-  
+
   /**
    * Callback when user wants to go back
    */
   onBack?: () => void;
-  
+
   /**
    * Callback when list is deleted
    */
   onDeleted?: () => void;
-  
+
   /**
    * Additional CSS classes
    */
@@ -97,8 +98,8 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
   // Form for editing list details
   const editForm = useForm<UpdateShoppingListDto>({
     initialValues: {
-      name: shoppingList?.name || '',
-      description: shoppingList?.description || '',
+      name: shoppingList?.name ?? '',
+      description: shoppingList?.description ?? '',
     },
   });
 
@@ -107,7 +108,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
     if (shoppingList) {
       editForm.setValues({
         name: shoppingList.name,
-        description: shoppingList.description || '',
+        description: shoppingList.description ?? '',
       });
     }
   }, [editForm, shoppingList]);
@@ -122,17 +123,17 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
     const uncheckedItems = shoppingList.items
       .filter(item => !item.completed)
       .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
-    
+
     const checkedItems = shoppingList.items
       .filter(item => item.completed)
       .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
-    
+
     return [...uncheckedItems, ...checkedItems];
   }, [shoppingList?.items]);
 
   // Combine CSS classes
-  const containerClass = className 
-    ? `${styles.container} ${className}` 
+  const containerClass = className
+    ? `${styles.container} ${className}`
     : styles.container;
 
   // Handle list editing
@@ -142,10 +143,10 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
         id: listId,
         data: {
           name: values.name?.trim(),
-          description: values.description?.trim() || undefined,
+          description: values.description?.trim() ?? undefined,
         }
       });
-      
+
       setIsEditing(false);
       notifications.show({
         title: 'Success',
@@ -167,7 +168,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
     if (shoppingList) {
       editForm.setValues({
         name: shoppingList.name,
-        description: shoppingList.description || '',
+        description: shoppingList.description ?? '',
       });
     }
     setIsEditing(false);
@@ -249,19 +250,19 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
   }
 
   // Error state
-  if (error || !shoppingList) {
+  if (error ?? !shoppingList) {
     return (
       <div className={containerClass}>
-        <Alert 
-          icon={<IconAlertCircle size={16} />} 
-          title="Error" 
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          title="Error"
           color="red"
           className={styles.error}
         >
-          {error?.message || 'Shopping list not found'}
+          {error?.message ?? 'Shopping list not found'}
         </Alert>
         {onBack && (
-          <Button 
+          <Button
             leftSection={<IconArrowLeft size={16} />}
             variant="light"
             onClick={onBack}
@@ -301,7 +302,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
               <IconArrowLeft size={20} />
             </ActionIcon>
           )}
-          
+
           <div className={styles.headerActions}>
             <ActionIcon
               variant="subtle"
@@ -313,7 +314,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
             >
               {isEditing ? <IconX size={20} /> : <IconEdit size={20} />}
             </ActionIcon>
-            
+
             <ActionIcon
               variant="subtle"
               color="red"
@@ -324,6 +325,8 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
             >
               <IconTrash size={20} />
             </ActionIcon>
+            
+            <UserMenu />
           </div>
         </Group>
       </header>
@@ -340,7 +343,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
                 {...editForm.getInputProps('name')}
                 className={styles.nameInput}
               />
-              
+
               <Textarea
                 label="Description"
                 placeholder="Optional description..."
@@ -348,7 +351,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
                 {...editForm.getInputProps('description')}
                 className={styles.descriptionInput}
               />
-              
+
               <Group justify="flex-end" gap="sm" className={styles.editActions}>
                 <Button
                   variant="subtle"
@@ -397,11 +400,11 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
                   </Badge>
                 )}
               </Group>
-              
-              <Progress 
-                value={completionPercentage} 
-                color={getStatusColor()} 
-                size="md" 
+
+              <Progress
+                value={completionPercentage}
+                color={getStatusColor()}
+                size="md"
                 striped={completionPercentage > 0 && completionPercentage < 100}
                 className={styles.progressBar}
               />
@@ -418,7 +421,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
           <Text size="lg" fw={500}>
             Items ({totalItems})
           </Text>
-          
+
           <Button
             leftSection={<IconPlus size={16} />}
             onClick={() => setShowAddForm(!showAddForm)}
@@ -432,7 +435,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
         {/* Add Item Form */}
         {showAddForm && (
           <div className={styles.addItemFormContainer}>
-            <AddItemForm 
+            <AddItemForm
               onAdd={handleAddItem}
               onCancel={() => setShowAddForm(false)}
               loading={addItemMutation.isPending}
@@ -482,10 +485,10 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
       >
         <Stack>
           <Text>
-            Are you sure you want to delete "{shoppingList.name}"? 
+            Are you sure you want to delete "{shoppingList.name}"?
             This action cannot be undone.
           </Text>
-          
+
           <Group justify="flex-end" gap="sm">
             <Button
               variant="subtle"
