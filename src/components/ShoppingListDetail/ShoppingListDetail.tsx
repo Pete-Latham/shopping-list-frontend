@@ -39,6 +39,7 @@ import {
   useUpdateShoppingListItem,
   useDeleteShoppingListItem
 } from '../../hooks/useShoppingLists';
+import { useShoppingListWebSocket } from '../../hooks/useShoppingListWebSocket';
 import styles from './ShoppingListDetail.module.css';
 
 export interface ShoppingListDetailProps {
@@ -94,6 +95,9 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
   const addItemMutation = useAddShoppingListItem();
   const updateItemMutation = useUpdateShoppingListItem();
   const deleteItemMutation = useDeleteShoppingListItem();
+  
+  // WebSocket for real-time updates
+  useShoppingListWebSocket(listId);
 
   // Form for editing list details
   const editForm = useForm<UpdateShoppingListDto>({

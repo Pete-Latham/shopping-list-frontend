@@ -5,6 +5,7 @@ import {
   useUpdateShoppingList, 
   useDeleteShoppingList 
 } from './hooks/useShoppingLists';
+import { useShoppingListWebSocket } from './hooks/useShoppingListWebSocket';
 import { ShoppingListCard } from './components/ShoppingListCard';
 import { ShoppingListDetail } from './components/ShoppingListDetail';
 import { ShoppingListForm } from './components/ShoppingListForm';
@@ -29,6 +30,11 @@ const App: React.FC = () => {
   const createListMutation = useCreateShoppingList();
   const updateListMutation = useUpdateShoppingList();
   const deleteListMutation = useDeleteShoppingList();
+  
+  // WebSocket connection for real-time updates
+  // Only connect when user is authenticated (or auth is disabled) and not viewing a specific list
+  const shouldConnectWebSocket = shouldFetchLists && !selectedListId;
+  useShoppingListWebSocket(shouldConnectWebSocket ? undefined : null);
 
   // Navigation handlers
   const handleViewList = (listId: number) => {

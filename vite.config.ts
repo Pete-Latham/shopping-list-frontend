@@ -19,12 +19,12 @@ export default defineConfig({
           return rewritten;
         },
         configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
+          proxy.on('error', (_err, _req, _res) => {
             if (typeof console !== 'undefined') {
               // console.log('[PROXY ERROR]', err);
             }
           });
-          proxy.on('proxyReq', (proxyReq, req, _res) => {
+          proxy.on('proxyReq', (_proxyReq, _req, _res) => {
             if (typeof console !== 'undefined') {
               // console.log('[PROXY REQ]', req.method, req.url, '->', proxyReq.path);
             }

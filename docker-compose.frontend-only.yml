@@ -1,0 +1,28 @@
+# version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shopping-list-frontend-only
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+      # Set backend URL to connect to the backend running in shopping-list-network
+      - VITE_BACKEND_URL=http://shopping-list-backend:3000
+    networks:
+      - shopping-list-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  shopping-list-network:
+    external: true
+    name: shopping-list-network
