@@ -8,14 +8,36 @@ import type {
   UpdateShoppingListItemDto,
 } from '../types';
 import { mockShoppingListsApi } from './mock';
+import { frontendConfig, type FrontendConfig } from '../config/frontend.config';
 
-// Use proxy in development, allow override with environment variable
-// If VITE_API_URL is not set, use '/api' which will be proxied by Vite
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api';
+// Configuration will be loaded from backend or fall back to environment variables
+let API_CONFIG: FrontendConfig | null = null;
 
-// Only use mock API when explicitly requested with VITE_USE_MOCK_API=true
-// This prevents masking backend connection issues with automatic fallback
-const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true';
+// Initialize configuration from backend
+const initializeConfig = async () => {
+  if (!API_CONFIG) {
+    try {
+      API_CONFIG = await frontendConfig.getConfig();
+      console.log('[API CLIENT] Configuration loaded:', {
+        apiUrl: API_CONFIG.apiUrl,
+        mockApi: API_CONFIG.enableMockApi
+      });
+    } catch (error) {
+      console.error('[API CLIENT] Failed to load configuration, using defaults:', error);
+      // Fallback to default configuration
+      API_CONFIG = {
+        apiUrl: import.meta.env.VITE_API_URL ?? '/api',
+        enableMockApi: import.meta.env.VITE_USE_MOCK_API === 'true'
+      };
+    }
+  }
+  return API_CONFIG;
+};
+
+// Get current configuration (async)
+const getConfig = async () => {
+  return await initializeConfig();
+};
 
 // Use the enhanced authClient with automatic token refresh
 const apiClient = authClient;
@@ -28,8 +50,10 @@ const apiClient = authClient;
 
 // Helper function: use mock only if explicitly requested, otherwise use real API
 const withMockFallback = async <T>(realApiFn: () => Promise<T>, mockApiFn: () => Promise<T>): Promise<T> => {
-  if (USE_MOCK_API) {
-    console.log('[API] Using mock data (VITE_USE_MOCK_API=true)');
+  const config = await getConfig();
+  
+  if (config.enableMockApi) {
+    console.log('[API] Using mock data (enableMockApi=true)');
     // Set global flag for DevBanner
     if (typeof window !== 'undefined') {
       window.__DEV_API_MODE__ = 'mock';

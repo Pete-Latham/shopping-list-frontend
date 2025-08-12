@@ -1,11 +1,21 @@
 import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 import type { RefreshTokenResponse } from '../types/auth';
+import { frontendConfig } from '../config/frontend.config';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api';
+// Get API base URL from configuration
+const getApiBaseUrl = async (): Promise<string> => {
+  try {
+    const config = await frontendConfig.getConfig();
+    return config.apiUrl;
+  } catch (error) {
+    console.warn('[AUTH CLIENT] Failed to load API URL from config, using default:', error);
+    return import.meta.env.VITE_API_URL ?? '/api';
+  }
+};
 
 // Create a dedicated client for token refresh requests
 const refreshClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_URL ?? '/api', // Will be updated per request
   headers: {
     'Content-Type': 'application/json',
   },
@@ -14,11 +24,33 @@ const refreshClient = axios.create({
 
 // Create the main auth client
 const authClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_URL ?? '/api', // Will be updated per request
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 3000,
+});
+
+// Add request interceptor to update base URL dynamically
+authClient.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
+  // Update base URL with latest configuration
+  const baseURL = await getApiBaseUrl();
+  config.baseURL = baseURL;
+  
+  // Add auth token
+  const token = localStorage.getItem('auth_token');
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  
+  return config;
+});
+
+// Add request interceptor for refresh client too
+refreshClient.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
+  const baseURL = await getApiBaseUrl();
+  config.baseURL = baseURL;
+  return config;
 });
 
 // Flag to prevent multiple concurrent refresh attempts
@@ -39,15 +71,6 @@ const processQueue = (error: any, token: string | null = null) => {
   
   failedQueue = [];
 };
-
-// Request interceptor to add auth token
-authClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('auth_token');
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
 
 // Response interceptor to handle token refresh
 authClient.interceptors.response.use(

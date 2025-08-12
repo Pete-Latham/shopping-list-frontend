@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { authApi } from '../api/auth';
-import { authClient } from '../api/authClient';
+// import { authClient } from '../api/authClient'; // Currently unused
 import type { User, LoginRequest, RegisterRequest, ChangePasswordRequest, AuthContextType } from '../types/auth';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -93,15 +93,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (userData: RegisterRequest) => {
     try {
-      const newUser = await authApi.register(userData);
+      await authApi.register(userData);
       
       notifications.show({
         title: 'Registration Successful',
         message: 'Account created! You can now login.',
         color: 'green',
       });
-
-      return newUser;
     } catch (error: any) {
       const message = error.response?.data?.message || 'Registration failed. Please try again.';
       notifications.show({

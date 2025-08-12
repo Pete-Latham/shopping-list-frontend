@@ -7,29 +7,31 @@ import {
   Divider,
   Modal,
   TextInput,
-  Group,
-  ActionIcon
+  Group
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { 
-  IconUser, 
   IconLogout, 
   IconKey, 
   IconChevronDown,
-  IconCheck,
-  IconX
+  IconCheck
 } from '@tabler/icons-react';
 import { useAuth } from '../../contexts/AuthContext';
 import type { ChangePasswordRequest } from '../../types/auth';
 import styles from './UserMenu.module.css';
+
+// Form interface includes confirmPassword for client-side validation
+interface PasswordChangeForm extends ChangePasswordRequest {
+  confirmPassword: string;
+}
 
 export const UserMenu: React.FC = () => {
   const { user, logout, changePassword, authEnabled } = useAuth();
   const [passwordModalOpened, { open: openPasswordModal, close: closePasswordModal }] = useDisclosure(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-  const passwordForm = useForm<ChangePasswordRequest>({
+  const passwordForm = useForm<PasswordChangeForm>({
     initialValues: {
       currentPassword: '',
       newPassword: '',
@@ -54,10 +56,12 @@ export const UserMenu: React.FC = () => {
     logout();
   };
 
-  const handleChangePassword = async (values: ChangePasswordRequest) => {
+  const handleChangePassword = async (values: PasswordChangeForm) => {
     try {
       setIsChangingPassword(true);
-      await changePassword(values);
+      // Extract only the fields needed for the API
+      const { currentPassword, newPassword } = values;
+      await changePassword({ currentPassword, newPassword });
       passwordForm.reset();
       closePasswordModal();
     } catch (error) {

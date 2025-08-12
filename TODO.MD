@@ -8,6 +8,6 @@
 
 - [x] Will we have issues with users disappearing when migrations are run because of the table being dropped? Do we need to protect this table or its data?
 
-- [ ] Add Infisical for secrets management
+- [x] Add Infisical for secrets management
 
 - [x] Have we got JWT refresh?
