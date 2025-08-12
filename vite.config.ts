@@ -14,19 +14,19 @@ export default defineConfig({
         rewrite: (path) => {
           const rewritten = path.replace(/^\/api/, '');
           if (typeof console !== 'undefined') {
-            console.log(`[PROXY] ${path} -> ${rewritten}`);
+            // console.log(`[PROXY] ${path} -> ${rewritten}`);
           }
           return rewritten;
         },
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, _res) => {
             if (typeof console !== 'undefined') {
-              console.log('[PROXY ERROR]', err);
+              // console.log('[PROXY ERROR]', err);
             }
           });
           proxy.on('proxyReq', (proxyReq, req, _res) => {
             if (typeof console !== 'undefined') {
-              console.log('[PROXY REQ]', req.method, req.url, '->', proxyReq.path);
+              // console.log('[PROXY REQ]', req.method, req.url, '->', proxyReq.path);
             }
           });
         },

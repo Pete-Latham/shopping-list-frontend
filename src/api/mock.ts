@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+ 
 // Mock API for frontend-only development
 import type {
   ShoppingList,
@@ -105,14 +105,14 @@ export const mockShoppingListsApi = {
   // Get all shopping lists
   getAll: async (): Promise<ShoppingList[]> => {
     await delay(300);
-    console.log('[MOCK API] Getting all shopping lists');
+    // console.log('[MOCK API] Getting all shopping lists');
     return [...mockLists];
   },
 
   // Get a single shopping list by ID
   getById: async (id: number): Promise<ShoppingList> => {
     await delay(200);
-    console.log(`[MOCK API] Getting shopping list ${id}`);
+    // console.log(`[MOCK API] Getting shopping list ${id}`);
     const list = mockLists.find(l => l.id === id);
     if (!list) {
       throw new Error(`Shopping list ${id} not found`);
@@ -123,7 +123,7 @@ export const mockShoppingListsApi = {
   // Create a new shopping list
   create: async (data: CreateShoppingListDto): Promise<ShoppingList> => {
     await delay(400);
-    console.log('[MOCK API] Creating shopping list:', data);
+    // console.log('[MOCK API] Creating shopping list:', data);
     const newList: ShoppingList = {
       id: nextListId++,
       name: data.name,
@@ -139,7 +139,7 @@ export const mockShoppingListsApi = {
   // Update a shopping list
   update: async (id: number, data: UpdateShoppingListDto): Promise<ShoppingList> => {
     await delay(300);
-    console.log(`[MOCK API] Updating shopping list ${id}:`, data);
+    // console.log(`[MOCK API] Updating shopping list ${id}:`, data);
     const listIndex = mockLists.findIndex(l => l.id === id);
     if (listIndex === -1) {
       throw new Error(`Shopping list ${id} not found`);
@@ -156,7 +156,7 @@ export const mockShoppingListsApi = {
   // Delete a shopping list
   delete: async (id: number): Promise<void> => {
     await delay(200);
-    console.log(`[MOCK API] Deleting shopping list ${id}`);
+    // console.log(`[MOCK API] Deleting shopping list ${id}`);
     const listIndex = mockLists.findIndex(l => l.id === id);
     if (listIndex === -1) {
       throw new Error(`Shopping list ${id} not found`);
@@ -167,7 +167,7 @@ export const mockShoppingListsApi = {
   // Add item to shopping list
   addItem: async (listId: number, data: CreateShoppingListItemDto): Promise<ShoppingListItem> => {
     await delay(300);
-    console.log(`[MOCK API] Adding item to list ${listId}:`, data);
+    // console.log(`[MOCK API] Adding item to list ${listId}:`, data);
     const listIndex = mockLists.findIndex(l => l.id === listId);
     if (listIndex === -1) {
       throw new Error(`Shopping list ${listId} not found`);
@@ -193,7 +193,7 @@ export const mockShoppingListsApi = {
   // Update an item in shopping list
   updateItem: async (listId: number, itemId: number, data: UpdateShoppingListItemDto): Promise<ShoppingListItem> => {
     await delay(200);
-    console.log(`[MOCK API] Updating item ${itemId} in list ${listId}:`, data);
+    // console.log(`[MOCK API] Updating item ${itemId} in list ${listId}:`, data);
     const listIndex = mockLists.findIndex(l => l.id === listId);
     if (listIndex === -1) {
       throw new Error(`Shopping list ${listId} not found`);
@@ -217,7 +217,7 @@ export const mockShoppingListsApi = {
   // Delete an item from shopping list
   deleteItem: async (listId: number, itemId: number): Promise<void> => {
     await delay(200);
-    console.log(`[MOCK API] Deleting item ${itemId} from list ${listId}`);
+    // console.log(`[MOCK API] Deleting item ${itemId} from list ${listId}`);
     const listIndex = mockLists.findIndex(l => l.id === listId);
     if (listIndex === -1) {
       throw new Error(`Shopping list ${listId} not found`);
@@ -235,7 +235,7 @@ export const mockShoppingListsApi = {
   // Get item suggestions for autocomplete
   getItemSuggestions: async (query?: string): Promise<string[]> => {
     await delay(150); // Faster response for autocomplete
-    console.log(`[MOCK API] Getting item suggestions for query: "${query ?? ''}"`); 
+    // console.log(`[MOCK API] Getting item suggestions for query: "${query ?? ''}"`); 
     
     if (!query || query.trim().length === 0) {
       // Return most common items when no query

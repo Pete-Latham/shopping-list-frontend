@@ -18,12 +18,12 @@ const initializeConfig = async () => {
   if (!API_CONFIG) {
     try {
       API_CONFIG = await frontendConfig.getConfig();
-      console.log('[API CLIENT] Configuration loaded:', {
-        apiUrl: API_CONFIG.apiUrl,
-        mockApi: API_CONFIG.enableMockApi
-      });
+      // console.log('[API CLIENT] Configuration loaded:', {
+      //   apiUrl: API_CONFIG.apiUrl,
+      //   mockApi: API_CONFIG.enableMockApi
+      // });
     } catch (error) {
-      console.error('[API CLIENT] Failed to load configuration, using defaults:', error);
+      // console.error('[API CLIENT] Failed to load configuration, using defaults:', error);
       // Fallback to default configuration
       API_CONFIG = {
         apiUrl: import.meta.env.VITE_API_URL ?? '/api',
@@ -53,7 +53,7 @@ const withMockFallback = async <T>(realApiFn: () => Promise<T>, mockApiFn: () =>
   const config = await getConfig();
   
   if (config.enableMockApi) {
-    console.log('[API] Using mock data (enableMockApi=true)');
+    // ('[API] Using mock data (enableMockApi=true)');
     // Set global flag for DevBanner
     if (typeof window !== 'undefined') {
       window.__DEV_API_MODE__ = 'mock';

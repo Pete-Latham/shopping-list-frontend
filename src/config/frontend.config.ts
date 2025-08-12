@@ -12,7 +12,7 @@ class FrontendConfigService {
   private lastFetchTime = 0;
 
   private constructor() {
-    console.log('[CONFIG] Frontend config service created');
+    // console.log('[CONFIG] Frontend config service created');
   }
 
   static getInstance(): FrontendConfigService {
@@ -32,7 +32,7 @@ class FrontendConfigService {
 
     // Try to fetch configuration from backend first
     try {
-      console.log('[CONFIG] Fetching frontend configuration from backend...');
+      // console.log('[CONFIG] Fetching frontend configuration from backend...');
       
       const response = await axios.get('/config/frontend', {
         baseURL: import.meta.env.VITE_API_URL || '/api',
@@ -49,10 +49,10 @@ class FrontendConfigService {
       this.cachedConfig = frontendConfig;
       this.lastFetchTime = now;
 
-      console.log('[CONFIG] Successfully fetched configuration from backend:', {
-        apiUrl: frontendConfig.apiUrl,
-        mockApi: frontendConfig.enableMockApi
-      });
+      // console.log('[CONFIG] Successfully fetched configuration from backend:', {
+      //   apiUrl: frontendConfig.apiUrl,
+      //   mockApi: frontendConfig.enableMockApi
+      // });
 
       return frontendConfig;
 
@@ -66,10 +66,10 @@ class FrontendConfigService {
       this.cachedConfig = envConfig;
       this.lastFetchTime = now;
       
-      console.log('[CONFIG] Using environment variables:', {
-        apiUrl: envConfig.apiUrl,
-        mockApi: envConfig.enableMockApi
-      });
+      // console.log('[CONFIG] Using environment variables:', {
+      //   apiUrl: envConfig.apiUrl,
+      //   mockApi: envConfig.enableMockApi
+      // });
       
       return envConfig;
     }
