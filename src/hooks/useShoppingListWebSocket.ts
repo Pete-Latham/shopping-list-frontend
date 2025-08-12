@@ -29,9 +29,9 @@ export const useShoppingListWebSocket = (listId?: number) => {
       return import.meta.env.VITE_WS_URL;
     }
     
-    // The frontend is served from a container but accessed via browser at localhost:5173
-    // The browser needs to connect to localhost:3000 (port-forwarded backend)
-    // NOT to the container service name
+    // In development (including devcontainers):
+    // - Browser connects to localhost:3000 (port-forwarded backend devcontainer)
+    // - Frontend container talks to backend-dev service name internally (not used for WebSocket)
     if (import.meta.env.DEV) {
       return 'http://localhost:3000';
     }

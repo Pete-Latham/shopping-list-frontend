@@ -21,11 +21,19 @@ const authClient = axios.create({
   timeout: 3000, // 3 second timeout for all requests
 });
 
-// Request interceptor to add auth token
+// Request interceptor to add auth token (except for login/register)
 authClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('auth_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  // Don't add auth header for login, register, or status endpoints
+  const noAuthEndpoints = ['/auth/login', '/auth/register', '/auth/status'];
+  const isNoAuthEndpoint = noAuthEndpoints.some(endpoint => 
+    config.url?.includes(endpoint)
+  );
+  
+  if (!isNoAuthEndpoint) {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return config;
 });

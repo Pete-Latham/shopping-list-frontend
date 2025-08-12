@@ -100,20 +100,21 @@ export const ShoppingListForm: React.FC<ShoppingListFormProps> = ({
 
   return (
     <div className={containerClass}>
-      <header className={styles.header}>
-        <h2 className={styles.title}>{formTitle}</h2>
-        <button
-          type="button"
-          onClick={onCancel}
-          className={styles.closeButton}
-          aria-label="Close form"
-          disabled={isLoading}
-        >
-          ✕
-        </button>
-      </header>
+      <div className={styles.modalContent}>
+        <header className={styles.header}>
+          <h2 className={styles.title}>{formTitle}</h2>
+          <button
+            type="button"
+            onClick={onCancel}
+            className={styles.closeButton}
+            aria-label="Close form"
+            disabled={isLoading}
+          >
+            ✕
+          </button>
+        </header>
 
-      <form onSubmit={handleSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="list-name" className={styles.label}>
             Shopping List Name *
@@ -179,7 +180,8 @@ export const ShoppingListForm: React.FC<ShoppingListFormProps> = ({
             )}
           </button>
         </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };
