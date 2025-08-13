@@ -150,15 +150,17 @@ const App: React.FC = () => {
         <main className={styles.mainContent}>
           {shoppingLists && shoppingLists.length > 0 ? (
             <div className={styles.shoppingListsGrid}>
-              {shoppingLists.map((list) => (
-                <ShoppingListCard 
-                  key={list.id} 
-                  shoppingList={list} 
-                  onView={handleViewList}
-                  onEdit={handleEditList}
-                  onDelete={handleDeleteList}
-                />
-              ))}
+              {[...shoppingLists]
+                .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+                .map((list) => (
+                  <ShoppingListCard 
+                    key={list.id} 
+                    shoppingList={list} 
+                    onView={handleViewList}
+                    onEdit={handleEditList}
+                    onDelete={handleDeleteList}
+                  />
+                ))}
             </div>
           ) : (
             <div className={styles.emptyState}>
