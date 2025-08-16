@@ -32,9 +32,9 @@ const App: React.FC = () => {
   const deleteListMutation = useDeleteShoppingList();
   
   // WebSocket connection for real-time updates
-  // Only connect when user is authenticated (or auth is disabled) and not viewing a specific list
-  const shouldConnectWebSocket = shouldFetchLists && !selectedListId;
-  useShoppingListWebSocket(shouldConnectWebSocket ? undefined : null);
+  // Connect when user is authenticated (or auth is disabled)
+  // Pass the selectedListId to join the specific list room, or undefined for general updates
+  useShoppingListWebSocket(shouldFetchLists ? (selectedListId ?? undefined) : undefined);
 
   // Navigation handlers
   const handleViewList = (listId: number) => {

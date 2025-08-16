@@ -27,7 +27,8 @@ const initializeConfig = async () => {
       // Fallback to default configuration
       API_CONFIG = {
         apiUrl: import.meta.env.VITE_API_URL ?? '/api',
-        enableMockApi: import.meta.env.VITE_USE_MOCK_API === 'true'
+        enableMockApi: import.meta.env.VITE_USE_MOCK_API === 'true',
+        disableUserRegistration: true
       };
     }
   }
@@ -52,7 +53,7 @@ const apiClient = authClient;
 const withMockFallback = async <T>(realApiFn: () => Promise<T>, mockApiFn: () => Promise<T>): Promise<T> => {
   const config = await getConfig();
   
-  if (config.enableMockApi) {
+  if (config && config.enableMockApi) {
     // ('[API] Using mock data (enableMockApi=true)');
     // Set global flag for DevBanner
     if (typeof window !== 'undefined') {
