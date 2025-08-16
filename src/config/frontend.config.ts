@@ -3,6 +3,7 @@ import axios from 'axios';
 export interface FrontendConfig {
   apiUrl: string;
   enableMockApi: boolean;
+  disableUserRegistration: boolean;
 }
 
 class FrontendConfigService {
@@ -43,6 +44,7 @@ class FrontendConfigService {
       const frontendConfig: FrontendConfig = {
         apiUrl: backendConfig.apiUrl || import.meta.env.VITE_API_URL || '/api',
         enableMockApi: backendConfig.enableMockApi || import.meta.env.VITE_USE_MOCK_API === 'true',
+        disableUserRegistration: backendConfig.disableUserRegistration ?? true, // Default to disabled for security
       };
 
       // Cache the config
@@ -79,6 +81,7 @@ class FrontendConfigService {
     return {
       apiUrl: import.meta.env.VITE_API_URL || '/api',
       enableMockApi: import.meta.env.VITE_USE_MOCK_API === 'true',
+      disableUserRegistration: false, // Default to allowing registration when using env fallback
     };
   }
 

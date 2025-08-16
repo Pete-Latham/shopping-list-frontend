@@ -8,7 +8,7 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
-  const { login, authEnabled } = useAuth();
+  const { login, authEnabled, disableUserRegistration } = useAuth();
   const [formData, setFormData] = useState<LoginRequest>({
     usernameOrEmail: '',
     password: '',
@@ -124,19 +124,31 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           </button>
         </form>
 
-        <div className={styles.footer}>
-          <p className={styles.footerText}>
-            Don't have an account?
-          </p>
-          <button
-            type="button"
-            className={styles.switchButton}
-            onClick={onSwitchToRegister}
-            disabled={isLoading}
-          >
-            Create account
-          </button>
-        </div>
+        {!disableUserRegistration && (
+          <div className={styles.footer}>
+            <p className={styles.footerText}>
+              Don't have an account?
+            </p>
+            <button
+              type="button"
+              className={styles.switchButton}
+              onClick={onSwitchToRegister}
+              disabled={isLoading}
+            >
+              Create account
+            </button>
+          </div>
+        )}
+        
+        {disableUserRegistration && (
+          <div className={styles.footer}>
+            <p className={styles.disabledMessage}>
+              New user registration is temporarily disabled.
+              <br />
+              Please contact your administrator for account access.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

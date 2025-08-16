@@ -1,0 +1,138 @@
+# Updated Synology Docker Compose with Infisical Integration and Health Monitoring
+# This version includes proper Infisical integration and comprehensive health checks
+
+version: '3.8'
+
+services:
+  # Frontend Service
+  shopping-list-frontend:
+    image: ghcr.io/your-username/shopping-list-frontend:latest
+    container_name: shopping-list-frontend
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      shopping-list-backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - shopping-list-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+
+  # Backend Service with Infisical Integration
+  shopping-list-backend:
+    image: ghcr.io/your-username/shopping-list-backend:latest
+    container_name: shopping-list-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      # Database connection (non-sensitive)
+      - DB_HOST=shopping-list-db
+      - DB_PORT=5432
+      - DB_DATABASE=shopping_list
+      # Infisical configuration - loaded from .env.local
+      - INFISICAL_TOKEN=${INFISICAL_TOKEN}
+      - INFISICAL_PROJECT_ID=${INFISICAL_PROJECT_ID}
+      - INFISICAL_ENV=${INFISICAL_ENV:-Production}
+      - INFISICAL_SITE_URL=${INFISICAL_SITE_URL:-https://eu.infisical.com}
+    env_file:
+      - .env.local
+    depends_on:
+      shopping-list-db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - shopping-list-net
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
+      - "traefik.http.services.backend.loadbalancer.server.port=3000"
+
+  # Database Service
+  shopping-list-db:
+    image: postgres:15-alpine
+    container_name: shopping-list-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-password}  # Will be overridden by Infisical
+      - POSTGRES_DB=shopping_list
+    volumes:
+      - shopping-list-data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    networks:
+      - shopping-list-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shopping_list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    ports:
+      - "5432:5432"  # For external access if needed
+
+  # Optional: Monitoring and Log Aggregation
+  monitoring:
+    image: prom/prometheus:latest
+    container_name: shopping-list-monitoring
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - monitoring-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    networks:
+      - shopping-list-net
+    restart: unless-stopped
+    depends_on:
+      - shopping-list-backend
+
+  # Optional: Log viewer (lightweight alternative to ELK stack)
+  logs:
+    image: gliderlabs/logspout:latest
+    container_name: shopping-list-logs
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: syslog://logs:514
+    networks:
+      - shopping-list-net
+    restart: unless-stopped
+
+networks:
+  shopping-list-net:
+    driver: bridge
+    name: shopping-list-network
+
+volumes:
+  shopping-list-data:
+    driver: local
+    name: shopping-list-postgres-data
+  monitoring-data:
+    driver: local
+    name: shopping-list-monitoring-data

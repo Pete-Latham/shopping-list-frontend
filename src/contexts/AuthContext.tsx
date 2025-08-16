@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { authApi } from '../api/auth';
+import { frontendConfig } from '../config/frontend.config';
 // import { authClient } from '../api/authClient'; // Currently unused
 import type { User, LoginRequest, RegisterRequest, ChangePasswordRequest, AuthContextType } from '../types/auth';
 
@@ -14,6 +15,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [authEnabled, setAuthEnabled] = useState(true);
+  const [disableUserRegistration, setDisableUserRegistration] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Initialize auth state on app load
@@ -23,6 +25,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // Check authentication status from backend
         const status = await authApi.getStatus();
         setAuthEnabled(status.authEnabled);
+
+        // Fetch frontend configuration including registration settings
+        try {
+          const config = await frontendConfig.getConfig();
+          setDisableUserRegistration(config.disableUserRegistration);
+        } catch (error) {
+          console.warn('Failed to fetch frontend config, using secure defaults:', error);
+          setDisableUserRegistration(true); // Default to disabled for security
+        }
 
         // If auth is disabled, set up mock user
         if (!status.authEnabled) {
@@ -183,6 +194,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     token,
     isAuthenticated: !!user,
     authEnabled,
+    disableUserRegistration,
     login,
     register,
     logout,
