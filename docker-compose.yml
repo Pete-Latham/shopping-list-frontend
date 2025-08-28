@@ -11,9 +11,10 @@ services:
       dockerfile: Dockerfile
     container_name: shopping-list-frontend
     ports:
-      - "8080:80"  # Adjust port as needed for your Synology setup
+      - "8080:80" # Adjust port as needed for your Synology setup
     environment:
       - NODE_ENV=production
+      - VITE_API_URL=https://petelatham.synology.me:3001
     depends_on:
       backend:
         condition: service_healthy
@@ -21,22 +22,22 @@ services:
       - shopping-list-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "/healthcheck.sh"]
+      test: [ "CMD", "/healthcheck.sh" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
     labels:
-      - "traefik.enable=true"  # If using Traefik
+      - "traefik.enable=true" # If using Traefik
       - "traefik.http.routers.shopping-list-frontend.rule=Host(`shopping-list.local`)"
       - "traefik.http.services.shopping-list-frontend.loadbalancer.server.port=80"
 
   # Backend Service (reference your existing backend)
   backend:
-    image: shopping-list-backend:latest  # Adjust to your backend image
+    image: shopping-list-backend:latest # Adjust to your backend image
     container_name: shopping-list-backend
     ports:
-      - "3000:3000"  # Internal port - can be removed if only accessed via frontend proxy
+      - "3000:3000" # Internal port - can be removed if only accessed via frontend proxy
     environment:
       - NODE_ENV=production
       - DB_HOST=postgres
@@ -51,7 +52,7 @@ services:
       - shopping-list-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      test: [ "CMD-SHELL", "curl -f http://localhost:3000/health || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -62,7 +63,7 @@ services:
     image: postgres:15-alpine
     container_name: shopping-list-db
     ports:
-      - "5432:5432"  # Can be removed if only accessed internally
+      - "5432:5432" # Can be removed if only accessed internally
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${DB_PASSWORD:-password}
@@ -70,12 +71,12 @@ services:
       - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro  # Optional: custom init
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro # Optional: custom init
     networks:
       - shopping-list-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d shopping_list"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d shopping_list" ]
       interval: 30s
       timeout: 10s
       retries: 3
